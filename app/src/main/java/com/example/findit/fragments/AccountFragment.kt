@@ -13,6 +13,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import android.util.Log
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.example.findit.R
 import com.example.findit.activity.MyProductsActivity
@@ -23,7 +24,6 @@ import java.lang.Exception
 class AccountFragment : Fragment() {
 
     private lateinit var binding: FragmentAccountBinding
-    lateinit var firebaseAuth: FirebaseAuth
 
     private companion object {
         private const val TAG = "ACCOUNT_TAG"
@@ -35,20 +35,18 @@ class AccountFragment : Fragment() {
     ): View {
         binding = FragmentAccountBinding.inflate(layoutInflater)
 
-        // Firebase Authorization
-        firebaseAuth = FirebaseAuth.getInstance()
-
         // Load Data
         loadMyData()
 
-        // Wishlist
+        // My Products
         binding.tvAccountMyProducts.setOnClickListener {
             startActivity(Intent(requireContext(), MyProductsActivity::class.java))
         }
 
-        // Settings
+        // Wishlist
         binding.tvAccountWishlist.setOnClickListener {
-            startActivity(Intent(requireContext(), WishlistProductsActivity::class.java))
+            Toast.makeText(requireContext(), "Wishlist products yet to implement", Toast.LENGTH_LONG).show()
+//            startActivity(Intent(requireContext(), WishlistProductsActivity::class.java))
         }
 
         // Settings
@@ -60,6 +58,7 @@ class AccountFragment : Fragment() {
     }
 
     private fun loadMyData() {
+        val firebaseAuth = FirebaseAuth.getInstance()
         val ref = FirebaseDatabase.getInstance().getReference("Users")
         ref.child(firebaseAuth.uid!!).addValueEventListener(object: ValueEventListener {
 

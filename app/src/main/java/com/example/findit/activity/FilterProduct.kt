@@ -1,12 +1,12 @@
 package com.example.findit.activity
 
 import android.widget.Filter
-import com.example.findit.adapter.HomeProductsAdapter
+import com.example.findit.adapter.ProductsAdapter
 import com.example.findit.model.Products
 import java.util.Locale
 
 class FilterProduct(
-    private val adapter: HomeProductsAdapter,
+    private val adapter: ProductsAdapter,
     private val filterList: ArrayList<Products>
 ) : Filter() {
     override fun performFiltering(constraint: CharSequence?): FilterResults {

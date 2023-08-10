@@ -10,12 +10,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.findit.activity.ProductDetailsActivity
-import com.example.findit.adapter.HomeProductsAdapter
+import com.example.findit.adapter.ProductsAdapter
 import com.example.findit.databinding.FragmentHomeBinding
 import com.example.findit.model.Products
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -29,7 +27,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
     private val productList = ArrayList<Products>()
-    private lateinit var adapter: HomeProductsAdapter
+    private lateinit var adapter: ProductsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,6 +62,11 @@ class HomeFragment : Fragment() {
 
         })
 
+        // location
+        binding.tvHomeChooseLocation.setOnClickListener {
+            Toast.makeText(requireContext(), "Location feature yet to implement", Toast.LENGTH_LONG).show()
+        }
+
         return binding.root
     }
 
@@ -85,7 +88,7 @@ class HomeFragment : Fragment() {
                 }
 
                 // Add the list to RecyclerView
-                adapter = HomeProductsAdapter(productList)
+                adapter = ProductsAdapter(productList)
                 binding.rvHomeProducts.adapter = adapter
 
                 // Open product details when clicked on product

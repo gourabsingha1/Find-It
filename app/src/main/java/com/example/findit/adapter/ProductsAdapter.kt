@@ -17,9 +17,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class HomeProductsAdapter(
+class ProductsAdapter(
     private val productsFirebase: ArrayList<Products>
-): RecyclerView.Adapter<HomeProductsAdapter.ProductViewHolder>(), Filterable {
+): RecyclerView.Adapter<ProductsAdapter.ProductViewHolder>(), Filterable {
 
     private var filter: FilterProduct? = null
     private var filterList = productsFirebase

@@ -4,10 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.findit.adapter.HomeProductsAdapter
-import com.example.findit.adapter.WishlistProductsAdapter
+import com.example.findit.adapter.ProductsAdapter
 import com.example.findit.databinding.ActivityWishlistProductsBinding
 import com.example.findit.model.Products
 import com.google.firebase.auth.FirebaseAuth
@@ -16,11 +14,13 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
+// not working
+
 class WishlistProductsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWishlistProductsBinding
     private val productList = ArrayList<Products>()
-    private lateinit var adapter: HomeProductsAdapter
+    private lateinit var adapter: ProductsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,15 +44,15 @@ class WishlistProductsActivity : AppCompatActivity() {
             .addValueEventListener(object : ValueEventListener {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    productList.clear()
+//                    productList.clear()
                     for(ds in snapshot.children) {
                         val productId = "${ds.child("productId").value}"
                         val productRef = FirebaseDatabase.getInstance().getReference("Products")
                         productRef.child(productId)
                             .addListenerForSingleValueEvent(object : ValueEventListener {
-                                override fun onDataChange(snapshot: DataSnapshot) {
+                                override fun onDataChange(productSnapshot: DataSnapshot) {
                                     try {
-                                        val product = snapshot.getValue(Products::class.java)
+                                        val product = productSnapshot.getValue(Products::class.java)
                                         productList.add(product!!)
                                     } catch (e : Exception) {
                                         Toast.makeText(this@WishlistProductsActivity, e.message, Toast.LENGTH_LONG).show()
@@ -67,7 +67,7 @@ class WishlistProductsActivity : AppCompatActivity() {
                     }
 
                     // Add the list to RecyclerView
-                    adapter = HomeProductsAdapter(productList)
+                    adapter = ProductsAdapter(productList)
                     binding.rvWishlistProducts.adapter = adapter
 
                     // Open product details when clicked on product
