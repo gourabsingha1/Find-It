@@ -9,6 +9,9 @@ Find products at your nearest store.
 - Search products
 - Find its location
 
+## App Preview
+https://github.com/gourabsingha1/Find-It/assets/110812339/0094d1a3-1dbd-4b51-b1f1-6e3191ba654d
+
 ## Installations
 1. Clone the repository: git clone https://github.com/gourabsingha1/Find-It.git
 2. Open the project in Android Studio
