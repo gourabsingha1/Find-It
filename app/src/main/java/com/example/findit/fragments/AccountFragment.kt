@@ -13,7 +13,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import android.util.Log
-import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.example.findit.R
 import com.example.findit.activity.MyProductsActivity
@@ -45,8 +44,8 @@ class AccountFragment : Fragment() {
 
         // Wishlist
         binding.tvAccountWishlist.setOnClickListener {
-            Toast.makeText(requireContext(), "Wishlist products yet to implement", Toast.LENGTH_LONG).show()
-//            startActivity(Intent(requireContext(), WishlistProductsActivity::class.java))
+//            Toast.makeText(requireContext(), "Wishlist products yet to implement", Toast.LENGTH_LONG).show()
+            startActivity(Intent(requireContext(), WishlistProductsActivity::class.java))
         }
 
         // Settings

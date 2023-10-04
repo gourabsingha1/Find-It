@@ -2,8 +2,11 @@ package com.example.findit.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.findit.adapter.ProductsAdapter
 import com.example.findit.databinding.ActivityWishlistProductsBinding
@@ -33,8 +36,29 @@ class WishlistProductsActivity : AppCompatActivity() {
         // RecyclerView
         binding.rvWishlistProducts.layoutManager = LinearLayoutManager(this)
 
+        // load wishlist products
         loadWishlistProducts()
 
+        // search products
+        binding.etWishlistProductsSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                try {
+                    val query = s.toString()
+                    adapter.filter.filter(query)
+                } catch (e : Exception) {
+                    Toast.makeText(this@WishlistProductsActivity, e.message, Toast.LENGTH_LONG).show()
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+        })
     }
 
     private fun loadWishlistProducts() {
@@ -42,9 +66,9 @@ class WishlistProductsActivity : AppCompatActivity() {
         val firebaseAuth = FirebaseAuth.getInstance()
         reference.child(firebaseAuth.uid!!).child("Wishlist")
             .addValueEventListener(object : ValueEventListener {
-
                 override fun onDataChange(snapshot: DataSnapshot) {
-//                    productList.clear()
+                    // does not let products reappear after deleting
+                    productList.clear()
                     for(ds in snapshot.children) {
                         val productId = "${ds.child("productId").value}"
                         val productRef = FirebaseDatabase.getInstance().getReference("Products")
@@ -73,7 +97,11 @@ class WishlistProductsActivity : AppCompatActivity() {
                     // Open product details when clicked on product
                     adapter.onItemClick = { product ->
                         Intent(this@WishlistProductsActivity, ProductDetailsActivity::class.java).also { intent ->
-                            intent.putExtra("EXTRA_PRODUCT", product)
+                            intent.putExtra("EXTRA_NAME", product.name)
+                            intent.putExtra("EXTRA_PRICE", product.price)
+                            intent.putExtra("EXTRA_LOCATION", product.location)
+                            intent.putExtra("EXTRA_DESCRIPTION", product.description)
+                            intent.putExtra("EXTRA_PRODUCT_ID", product.productId)
                             startActivity(intent)
                         }
                     }

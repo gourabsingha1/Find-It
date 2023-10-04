@@ -20,7 +20,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.lang.Exception
 
-// Fragment overlapping problem
 // Search results not updated after wrong keyword
 
 class HomeFragment : Fragment() {
@@ -83,7 +82,7 @@ class HomeFragment : Fragment() {
                         val product = ds.getValue(Products::class.java)
                         productList.add(product!!)
                     } catch (e: Exception) {
-                        Toast.makeText(requireContext(), e.message, Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), "HERE -> ${e.message}", Toast.LENGTH_LONG).show()
                     }
                 }
 
@@ -94,7 +93,11 @@ class HomeFragment : Fragment() {
                 // Open product details when clicked on product
                 adapter.onItemClick = { product ->
                     Intent(requireContext(), ProductDetailsActivity::class.java).also { intent ->
-                        intent.putExtra("EXTRA_PRODUCT", product)
+                        intent.putExtra("EXTRA_NAME", product.name)
+                        intent.putExtra("EXTRA_PRICE", product.price)
+                        intent.putExtra("EXTRA_LOCATION", product.location)
+                        intent.putExtra("EXTRA_DESCRIPTION", product.description)
+                        intent.putExtra("EXTRA_PRODUCT_ID", product.productId)
                         startActivity(intent)
                     }
                 }

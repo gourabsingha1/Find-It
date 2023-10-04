@@ -4,14 +4,17 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.findit.R
 import com.example.findit.databinding.ActivityMainBinding
 import com.example.findit.fragments.AddFragment
 import com.example.findit.fragments.HomeFragment
 import com.example.findit.fragments.AccountFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
-
-// fragment overlapping
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,38 +40,31 @@ class MainActivity : AppCompatActivity() {
             when(item.itemId) {
                 R.id.bnmHome -> {
                     setFragment(HomeFragment())
-                    true
                 }
                 R.id.bnmAdd -> {
                     if(firebaseAuth.currentUser == null) {
                         startActivity(Intent(this, LoginOptionsActivity::class.java))
-                        false
                     }
                     else {
                         setFragment(AddFragment())
-                        true
-                    }
-                }
-                R.id.bnmAccount -> {
-                    if(firebaseAuth.currentUser == null) {
-                        startActivity(Intent(this, LoginOptionsActivity::class.java))
-                        false
-                    }
-                    else {
-                        setFragment(AccountFragment())
-                        true
                     }
                 }
                 else -> {
-                    false
+                    if(firebaseAuth.currentUser == null) {
+                        startActivity(Intent(this, LoginOptionsActivity::class.java))
+                    }
+                    else {
+                        setFragment(AccountFragment())
+                    }
                 }
             }
+            true
         }
 
         // Bottom navigation view
 //        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 //        val navController = findNavController(R.id.flFragment)
-//        appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.addFragment, R.id.profileFragment))
+//        appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.addFragment, R.id.accountFragment))
 //        setupActionBarWithNavController(navController, appBarConfiguration)
 //        bottomNavigationView.setupWithNavController(navController)
     }

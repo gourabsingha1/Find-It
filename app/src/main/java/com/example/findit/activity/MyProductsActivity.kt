@@ -80,7 +80,11 @@ class MyProductsActivity : AppCompatActivity() {
                     // Open product details when clicked on product
                     adapter.onItemClick = { product ->
                         Intent(this@MyProductsActivity, ProductDetailsActivity::class.java).also { intent ->
-                            intent.putExtra("EXTRA_PRODUCT", product)
+                            intent.putExtra("EXTRA_NAME", product.name)
+                            intent.putExtra("EXTRA_PRICE", product.price)
+                            intent.putExtra("EXTRA_LOCATION", product.location)
+                            intent.putExtra("EXTRA_DESCRIPTION", product.description)
+                            intent.putExtra("EXTRA_PRODUCT_ID", product.productId)
                             startActivity(intent)
                         }
                     }

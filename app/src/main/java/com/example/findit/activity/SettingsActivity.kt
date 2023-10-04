@@ -4,8 +4,6 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityOptionsCompat
-import com.example.findit.R
 import com.example.findit.databinding.ActivitySettingsBinding
 import com.google.firebase.auth.FirebaseAuth
 

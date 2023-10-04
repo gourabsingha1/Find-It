@@ -13,7 +13,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginTop="100dp"
-        android:background="@color/grey"
+        android:background="@color/grey_200"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_person_white"
         app:layout_constraintStart_toStartOf="parent"

@@ -40,7 +40,7 @@
             android:minHeight="56dp"
             android:minWidth="60dp"
             app:ccp_autoDetectCountry="true"
-            app:ccp_contentColor="@color/grey"
+            app:ccp_contentColor="@color/grey_200"
             app:ccp_rememberLastSelection="true"
             app:ccp_showFlag="false"
             app:ccp_showNameCode="false"/>

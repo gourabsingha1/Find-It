@@ -27,7 +27,12 @@ class ProductDetailsActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         // load data
-        val product = intent.getParcelableExtra<Products>("EXTRA_PRODUCT")!!
+        val productName = intent.getStringExtra("EXTRA_NAME")
+        val productPrice = intent.getDoubleExtra("EXTRA_PRICE", 0.0)
+        val productLocation = intent.getStringExtra("EXTRA_LOCATION")
+        val productDescription = intent.getStringExtra("EXTRA_DESCRIPTION")
+        val productId = intent.getStringExtra("EXTRA_PRODUCT_ID")
+        val product = Products(productName, productPrice, productLocation, productDescription, "", productId)
         binding.tvProductName.text = product.name
         binding.tvProductPrice.text = product.price.toString()
         binding.tvProductLocation.text = product.location
@@ -60,6 +65,29 @@ class ProductDetailsActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    private fun checkIfInWishlist(productId: String) {
+        val reference = FirebaseDatabase.getInstance().getReference("Users")
+        val firebaseAuth = FirebaseAuth.getInstance()
+        if(firebaseAuth.currentUser != null) {
+            reference.child(firebaseAuth.uid!!).child("Wishlist")
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if(snapshot.exists()) {
+                            if(snapshot.child(productId).exists()) {
+                                alreadyInWishlist = true
+                                binding.ivProductDetailsWishlist.setImageResource(R.drawable.baseline_favorite_24)
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+
+                    }
+
+                })
+        }
     }
 
     private fun addToWishlist(productId: String) {
@@ -95,29 +123,6 @@ class ProductDetailsActivity : AppCompatActivity() {
                 }.addOnFailureListener { e ->
                     Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
                 }
-        }
-    }
-
-    private fun checkIfInWishlist(productId: String) {
-        val reference = FirebaseDatabase.getInstance().getReference("Users")
-        val firebaseAuth = FirebaseAuth.getInstance()
-        if(firebaseAuth.currentUser != null) {
-            reference.child(firebaseAuth.uid!!).child("Wishlist")
-                .addValueEventListener(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        if(snapshot.exists()) {
-                            if(snapshot.child(productId).exists()) {
-                                alreadyInWishlist = true
-                                binding.ivProductDetailsWishlist.setImageResource(R.drawable.baseline_favorite_24)
-                            }
-                        }
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-
-                    }
-
-                })
         }
     }
 }

@@ -32,7 +32,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginTop="23dp"
-        android:background="@color/grey"
+        android:background="@color/grey_200"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_person_white"
         app:layout_constraintEnd_toEndOf="parent"
@@ -94,7 +94,7 @@
             android:minWidth="60dp"
             android:minHeight="56dp"
             app:ccp_autoDetectCountry="true"
-            app:ccp_contentColor="@color/grey"
+            app:ccp_contentColor="@color/grey_200"
             app:ccp_rememberLastSelection="true"
             app:ccp_showFlag="false"
             app:ccp_showNameCode="false" />
