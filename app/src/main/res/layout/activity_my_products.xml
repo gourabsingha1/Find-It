@@ -7,36 +7,24 @@
     android:padding="20dp"
     tools:context=".activity.MyProductsActivity">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cvMyProductsSearch"
+    <SearchView
+        android:id="@+id/myProductsSearchView"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        app:cardCornerRadius="10dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:iconifiedByDefault="false"
+        android:queryHint="Search"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <EditText
-            android:id="@+id/etMyProductsSearch"
-            style="@style/TextAppearance.MaterialComponents.Body1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawablePadding="10dp"
-            android:gravity="center_vertical"
-            android:hint="Search"
-            app:drawableStartCompat="@drawable/baseline_search_24"
-            android:background="@android:color/transparent"
-            android:padding="6dp"/>
-
-    </com.google.android.material.card.MaterialCardView>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/cvMyProductsSearch"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="500dp"
+        android:layout_marginTop="120dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/myProductsSearchView">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMyProducts"
@@ -44,7 +32,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintVertical_bias="0.5"
-            tools:listitem="@layout/item_product"/>
+            tools:listitem="@layout/item_product" />
 
     </ScrollView>
 

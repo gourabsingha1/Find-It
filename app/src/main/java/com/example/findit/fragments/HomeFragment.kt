@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,6 +28,7 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private val productList = ArrayList<Products>()
     private lateinit var adapter: ProductsAdapter
+    private lateinit var searchView: SearchView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,27 +40,20 @@ class HomeFragment : Fragment() {
         // RecyclerView
         binding.rvHomeProducts.layoutManager = LinearLayoutManager(requireContext())
 
+        // load products
         loadProducts()
 
         // search products
-        binding.etHomeSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
+        binding.homeSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                adapter.filter.filter(query)
+                return false
             }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                try {
-                    val query = s.toString()
-                    adapter.filter.filter(query)
-                } catch (e : Exception) {
-                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_LONG).show()
-                }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                loadProducts()
+                return false
             }
-
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-
         })
 
         // location

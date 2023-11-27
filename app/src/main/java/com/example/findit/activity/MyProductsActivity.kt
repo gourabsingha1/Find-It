@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
@@ -37,24 +38,16 @@ class MyProductsActivity : AppCompatActivity() {
         loadMyProducts()
 
         // search products
-        binding.etMyProductsSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
+        binding.myProductsSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                adapter.filter.filter(query)
+                return false
             }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                try {
-                    val query = s.toString()
-                    adapter.filter.filter(query)
-                } catch (e : Exception) {
-                    Toast.makeText(this@MyProductsActivity, e.message, Toast.LENGTH_LONG).show()
-                }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                loadMyProducts()
+                return false
             }
-
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-
         })
     }
 

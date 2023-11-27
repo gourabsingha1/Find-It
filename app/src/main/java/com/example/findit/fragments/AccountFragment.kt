@@ -62,6 +62,7 @@ class AccountFragment : Fragment() {
         ref.child(firebaseAuth.uid!!).addValueEventListener(object: ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
+                // get data
                 val name = "${snapshot.child("name").value}"
                 val email = "${snapshot.child("email").value}"
                 var timestamp = "${snapshot.child("timestamp").value}"
