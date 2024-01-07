@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dialog_my_products"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvMyProductsEdit"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/baseline_edit_24"
+        android:drawablePadding="16dp"
+        android:gravity="center_vertical"
+        android:padding="14dp"
+        android:text="Edit"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tvMyProductsDelete"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvMyProductsEdit"
+        android:drawableStart="@drawable/baseline_delete_24"
+        android:drawablePadding="16dp"
+        android:gravity="center_vertical"
+        android:padding="14dp"
+        android:text="Delete"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tvMyProductsSeeProduct"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvMyProductsDelete"
+        android:drawableStart="@drawable/baseline_arrow_outward_24"
+        android:drawablePadding="16dp"
+        android:gravity="center_vertical"
+        android:padding="14dp"
+        android:text="See Product"
+        android:textSize="16sp" />
+
+</RelativeLayout>

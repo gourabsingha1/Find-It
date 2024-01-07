@@ -1,31 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="24dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="4dp"
     tools:context=".fragments.HomeFragment">
 
-    <SearchView
-        android:id="@+id/homeSearchView"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cvHomeSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="68dp"
-        android:iconifiedByDefault="false"
-        android:queryHint="Search"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:cardCornerRadius="10dp">
+
+        <EditText
+            android:id="@+id/etHomeSearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawablePadding="16dp"
+            android:hint="Search"
+            android:padding="14dp"
+            android:textSize="18sp"
+            app:drawableStartCompat="@drawable/baseline_search_24" />
+
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cvHomeChooseLocation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/homeSearchView">
+        android:layout_below="@+id/cvHomeSearch"
+        app:cardCornerRadius="10dp">
 
         <TextView
             android:id="@+id/tvHomeChooseLocation"
@@ -40,25 +45,46 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <ScrollView
-        android:id="@+id/scrollView2"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cvAISearch"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cvHomeChooseLocation"
-        app:layout_constraintVertical_bias="0.5">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cvHomeChooseLocation"
+        app:cardCornerRadius="10dp">
+
+        <TextView
+            android:id="@+id/tvAISearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawablePadding="16dp"
+            android:padding="14dp"
+            android:text="AI Search"
+            android:textSize="18sp"
+            app:drawableStartCompat="@drawable/baseline_star_border_purple500_24" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <ScrollView
+        android:id="@+id/svHomeProducts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cvAISearch"
+        android:fillViewport="true"
+        android:layout_marginBottom="50dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvHomeProducts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintVertical_bias="0.5"
             tools:listitem="@layout/item_product" />
 
     </ScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ProgressBar
+        android:id="@+id/pbHome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
+</RelativeLayout>

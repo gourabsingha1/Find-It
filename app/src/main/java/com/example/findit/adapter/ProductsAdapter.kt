@@ -17,23 +17,22 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class ProductsAdapter(
-    private val productsFirebase: ArrayList<Products>
+class ProductsAdapter(var productsFirebase: ArrayList<Products>
 ): RecyclerView.Adapter<ProductsAdapter.ProductViewHolder>(), Filterable {
 
     private var filter: FilterProduct? = null
     private var filterList = productsFirebase
 
     inner class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvName = itemView.findViewById<TextView>(R.id.tvName)
-        val tvPrice = itemView.findViewById<TextView>(R.id.tvPrice)
-        val tvLocation = itemView.findViewById<TextView>(R.id.tvLocation)
-        val ivImage = itemView.findViewById<ImageView>(R.id.ivImage)
+        val tvName: TextView = itemView.findViewById(R.id.tvName)
+        val tvPrice: TextView = itemView.findViewById(R.id.tvPrice)
+        val tvLocation: TextView = itemView.findViewById(R.id.tvLocation)
+        val ivImage: ImageView = itemView.findViewById(R.id.ivImage)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        val viewHolder = ProductViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_product, parent, false))
-        return viewHolder
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_product, parent, false)
+        return ProductViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
@@ -55,18 +54,12 @@ class ProductsAdapter(
         return productsFirebase.size
     }
 
-    fun updateList(newList: ArrayList<Products>) {
-        productsFirebase.clear()
-        productsFirebase.addAll(newList)
-        notifyDataSetChanged()
-    }
-
     // Open product details on click
     var onItemClick : ((Products) -> Unit)? = null
 
     private fun loadProductImage(holder: ProductViewHolder, productId: String) {
-        val reference = FirebaseDatabase.getInstance().getReference("Products")
-        reference.child(productId).addValueEventListener(object : ValueEventListener {
+        FirebaseDatabase.getInstance().getReference("Products")
+            .child(productId).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val imageUrl = "${snapshot.child("imageUrl").value}"
                 Glide.with(holder.itemView).load(imageUrl).into(holder.ivImage)

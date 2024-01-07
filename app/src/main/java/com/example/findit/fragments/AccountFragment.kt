@@ -34,7 +34,6 @@ class AccountFragment : Fragment() {
     ): View {
         binding = FragmentAccountBinding.inflate(layoutInflater)
 
-        // Load Data
         loadMyData()
 
         // My Products
@@ -44,7 +43,6 @@ class AccountFragment : Fragment() {
 
         // Wishlist
         binding.tvAccountWishlist.setOnClickListener {
-//            Toast.makeText(requireContext(), "Wishlist products yet to implement", Toast.LENGTH_LONG).show()
             startActivity(Intent(requireContext(), WishlistProductsActivity::class.java))
         }
 
@@ -88,7 +86,7 @@ class AccountFragment : Fragment() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-
+                Log.e(TAG, error.message)
             }
 
         })

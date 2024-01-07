@@ -1,16 +1,24 @@
 package com.example.findit.fragments
 
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
+import android.view.Window
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.findit.R
+import com.example.findit.activity.AISearchActivity
 import com.example.findit.activity.ProductDetailsActivity
 import com.example.findit.adapter.ProductsAdapter
 import com.example.findit.databinding.FragmentHomeBinding
@@ -19,16 +27,12 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import java.lang.Exception
-
-// Search results not updated after wrong keyword
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
     private val productList = ArrayList<Products>()
     private lateinit var adapter: ProductsAdapter
-    private lateinit var searchView: SearchView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,38 +40,54 @@ class HomeFragment : Fragment() {
     ): View {
 
         binding = FragmentHomeBinding.inflate(layoutInflater)
-        
+
         // RecyclerView
         binding.rvHomeProducts.layoutManager = LinearLayoutManager(requireContext())
 
-        // load products
+        // Enable smooth ScrollView
+        binding.svHomeProducts.isSmoothScrollingEnabled = true
+
+        // Load products
         loadProducts()
 
-        // search products
-        binding.homeSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                adapter.filter.filter(query)
-                return false
+        // Search products
+        binding.etHomeSearch.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
             }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                loadProducts()
-                return false
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                try {
+                    val query = p0.toString()
+                    adapter.filter.filter(query)
+                } catch (e: Exception) {
+                    Toast.makeText(requireContext(), "Search error: ${e.message}", Toast.LENGTH_LONG).show()
+                }
             }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+
         })
 
-        // location
+        // Location
         binding.tvHomeChooseLocation.setOnClickListener {
-            Toast.makeText(requireContext(), "Location feature yet to implement", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "Location feature yet to implement", Toast.LENGTH_SHORT).show()
+        }
+
+        // Gemini
+        binding.tvAISearch.setOnClickListener {
+            startActivity(Intent(requireContext(), AISearchActivity::class.java))
         }
 
         return binding.root
     }
 
-    // load products
+    // Load products
     private fun loadProducts() {
-        val reference = FirebaseDatabase.getInstance().getReference("Products")
-        reference.addValueEventListener(object : ValueEventListener {
+        FirebaseDatabase.getInstance().getReference("Products")
+            .addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 // does not let products reappear after deleting
                 productList.clear()
@@ -84,6 +104,7 @@ class HomeFragment : Fragment() {
                 // Add the list to RecyclerView
                 adapter = ProductsAdapter(productList)
                 binding.rvHomeProducts.adapter = adapter
+                binding.pbHome.visibility = View.INVISIBLE
 
                 // Open product details when clicked on product
                 adapter.onItemClick = { product ->

@@ -30,7 +30,9 @@ class FilterProduct(
     }
 
     override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-        adapter.updateList(results?.values as ArrayList<Products>)
-        adapter.notifyDataSetChanged()
+        if (results != null) {
+            adapter.productsFirebase = results.values as ArrayList<Products>
+            adapter.notifyDataSetChanged()
+        }
     }
 }

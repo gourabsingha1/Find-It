@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.SearchView
+import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.findit.adapter.ProductsAdapter
 import com.example.findit.databinding.ActivityWishlistProductsBinding
@@ -36,20 +36,35 @@ class WishlistProductsActivity : AppCompatActivity() {
         // RecyclerView
         binding.rvWishlistProducts.layoutManager = LinearLayoutManager(this)
 
+        // Enable smooth ScrollView
+        binding.svWishlistProducts.isSmoothScrollingEnabled = true
+
         // load wishlist products
         loadWishlistProducts()
 
-        // search products
-        binding.wishlistSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                adapter.filter.filter(query)
-                return false
+        // Search products
+        binding.etWishlistProductsSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
             }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                loadWishlistProducts()
-                return false
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                try {
+                    val query = p0.toString()
+                    adapter.filter.filter(query)
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        this@WishlistProductsActivity,
+                        "Search error: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+
         })
     }
 
@@ -61,7 +76,7 @@ class WishlistProductsActivity : AppCompatActivity() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     // does not let products reappear after deleting
                     productList.clear()
-                    for(ds in snapshot.children) {
+                    for (ds in snapshot.children) {
                         val productId = "${ds.child("productId").value}"
                         val productRef = FirebaseDatabase.getInstance().getReference("Products")
                         productRef.child(productId)
@@ -70,13 +85,17 @@ class WishlistProductsActivity : AppCompatActivity() {
                                     try {
                                         val product = productSnapshot.getValue(Products::class.java)
                                         productList.add(product!!)
-                                    } catch (e : Exception) {
-                                        Toast.makeText(this@WishlistProductsActivity, e.message, Toast.LENGTH_LONG).show()
+                                    } catch (e: Exception) {
+                                        Toast.makeText(
+                                            this@WishlistProductsActivity,
+                                            e.message,
+                                            Toast.LENGTH_LONG
+                                        ).show()
                                     }
                                 }
 
                                 override fun onCancelled(error: DatabaseError) {
-
+                                    Log.e("WishlistProductsActivityError: ", error.message)
                                 }
 
                             })
@@ -87,10 +106,14 @@ class WishlistProductsActivity : AppCompatActivity() {
                         // Add the list to RecyclerView
                         adapter = ProductsAdapter(productList)
                         binding.rvWishlistProducts.adapter = adapter
+                        binding.pbWishlistProducts.visibility = View.INVISIBLE
 
                         // Open product details when clicked on product
                         adapter.onItemClick = { product ->
-                            Intent(this@WishlistProductsActivity, ProductDetailsActivity::class.java).also { intent ->
+                            Intent(
+                                this@WishlistProductsActivity,
+                                ProductDetailsActivity::class.java
+                            ).also { intent ->
                                 intent.putExtra("EXTRA_NAME", product.name)
                                 intent.putExtra("EXTRA_PRICE", product.price)
                                 intent.putExtra("EXTRA_LOCATION", product.location)
@@ -103,7 +126,7 @@ class WishlistProductsActivity : AppCompatActivity() {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-
+                    Log.e("WishlistProductsActivityError: ", error.message)
                 }
 
             })

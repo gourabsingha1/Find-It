@@ -9,6 +9,7 @@ class Products(
     val productId: String? = null,
     val timestamp: Long? = null,
     val uid: String? = null,
+    val searchTags: ArrayList<String>? = null,
     val latitude: Double? = null,
     val longitude: Double? = null,
 )
