@@ -122,6 +122,8 @@ class EditProfileActivity : AppCompatActivity() {
         })
     }
 
+
+    // **** Getting and setting image stuffs ****
     private fun imagePickDialog() {
         // Show popupmenu when clicked on imageView
         val popupMenu = PopupMenu(this, binding.ivEditProfileProfilePic)
@@ -195,7 +197,6 @@ class EditProfileActivity : AppCompatActivity() {
             }
         }
 
-
     private val requestStoragePermissions =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             Log.d(TAG, "requestStoragePermissions: isGranted $isGranted")
@@ -232,7 +233,8 @@ class EditProfileActivity : AppCompatActivity() {
             }
         }
 
-    // variables to hold updated product data
+
+    // **** Variables to hold updated product data ****
     var name = ""
     var email = ""
     var phoneCode = ""

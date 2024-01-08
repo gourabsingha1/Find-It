@@ -121,7 +121,7 @@ class AISearchActivity : AppCompatActivity() {
                                 break
                             }
                         } catch (e: Exception) {
-//                            Log.e("AISearchActivityError: ", e.message!!)
+                            Log.e("AISearchActivityError: ", e.message!!)
                         }
                     }
 
@@ -145,7 +145,7 @@ class AISearchActivity : AppCompatActivity() {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-//                    Log.e("AISearchActivityError", error.message)
+                    Log.e("AISearchActivityError", error.message)
                     binding.pbAISearch.visibility = View.INVISIBLE
                 }
 

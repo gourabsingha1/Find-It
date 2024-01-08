@@ -115,8 +115,10 @@ class MyProductsActivity : AppCompatActivity() {
 
         tvMyProductsEdit.setOnClickListener {
             dialog.dismiss()
-            Toast.makeText(this@MyProductsActivity, "Yet to implement!", Toast.LENGTH_LONG).show()
-//            startActivity(Intent(this, EditProductActivity::class.java))
+            Intent(this, EditProductActivity::class.java).also { intent ->
+                intent.putExtra("EXTRA_PRODUCT_ID", product.productId)
+                startActivity(intent)
+            }
         }
 
         tvMyProductsDelete.setOnClickListener {

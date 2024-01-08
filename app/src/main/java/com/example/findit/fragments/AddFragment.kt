@@ -165,9 +165,8 @@ class AddFragment : Fragment() {
 
     // Upload product image to firebase storage
     private fun uploadImagesToStorage(productId: String) {
-        var storageRef = FirebaseStorage.getInstance().reference.child("Images")
         try {
-            storageRef = storageRef.child(productId)
+            val storageRef = FirebaseStorage.getInstance().reference.child("Images").child(productId)
             imageUri?.let {
                 storageRef.putFile(it).addOnSuccessListener { taskSnapshot ->
                     // set imageUrl to firebase realtime
