@@ -155,7 +155,11 @@ class MyProductsActivity : AppCompatActivity() {
         tvMyProductsDeleteDelete.setOnClickListener {
             dialog.dismiss()
             FirebaseDatabase.getInstance().getReference("Products")
-                .child(productId).removeValue()
+                .child(productId).removeValue().addOnSuccessListener {
+                    Toast.makeText(this@MyProductsActivity, "Product deleted successfully", Toast.LENGTH_LONG).show()
+                }.addOnFailureListener {
+                    Toast.makeText(this@MyProductsActivity, "Couldn't delete", Toast.LENGTH_LONG).show()
+                }
         }
 
         tvMyProductsDeleteCancel.setOnClickListener {

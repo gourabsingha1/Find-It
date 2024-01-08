@@ -1,5 +1,7 @@
 #Bugs
 * AISearchActivity Crashing
+* Crashing after editing product
+* Crashing after deleting product
 
 #Features
 * Show nearby products of chosen location.

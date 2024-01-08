@@ -128,26 +128,23 @@ class AISearchActivity : AppCompatActivity() {
 
                     if(productList.size == 0) {
                         binding.tvAISearchNoProductsFound.visibility = View.VISIBLE
-                        binding.tvSearchTags.visibility = View.VISIBLE
-                        binding.pbAISearch.visibility = View.INVISIBLE
                     }
-                    else {
-                        // Add the list to RecyclerView
-                        val productsAdapter = ProductsAdapter(productList)
-                        binding.rvAISearch.adapter = productsAdapter
-                        binding.tvSearchTags.visibility = View.VISIBLE
-                        binding.pbAISearch.visibility = View.INVISIBLE
 
-                        // Open product details when clicked on product
-                        productsAdapter.onItemClick = { product ->
-                            Intent(this@AISearchActivity, ProductDetailsActivity::class.java).also { intent ->
-                                intent.putExtra("EXTRA_NAME", product.name)
-                                intent.putExtra("EXTRA_PRICE", product.price)
-                                intent.putExtra("EXTRA_LOCATION", product.location)
-                                intent.putExtra("EXTRA_DESCRIPTION", product.description)
-                                intent.putExtra("EXTRA_PRODUCT_ID", product.productId)
-                                startActivity(intent)
-                            }
+                    // Add the list to RecyclerView
+                    val productsAdapter = ProductsAdapter(productList)
+                    binding.rvAISearch.adapter = productsAdapter
+                    binding.tvSearchTags.visibility = View.VISIBLE
+                    binding.pbAISearch.visibility = View.INVISIBLE
+
+                    // Open product details when clicked on product
+                    productsAdapter.onItemClick = { product ->
+                        Intent(this@AISearchActivity, ProductDetailsActivity::class.java).also { intent ->
+                            intent.putExtra("EXTRA_NAME", product.name)
+                            intent.putExtra("EXTRA_PRICE", product.price)
+                            intent.putExtra("EXTRA_LOCATION", product.location)
+                            intent.putExtra("EXTRA_DESCRIPTION", product.description)
+                            intent.putExtra("EXTRA_PRODUCT_ID", product.productId)
+                            startActivity(intent)
                         }
                     }
                 }
