@@ -4,13 +4,15 @@
 Find products at your nearest store.
 
 ## Key Features
-- Login using google, phone or email
-- Add a product
+- Do CRUD operations on your product
 - Search products
 - Find its location
+- Search using AI
+- Login using google, phone or email
+- Edit your profile
 
 ## App Preview
-https://github.com/gourabsingha1/Find-It/assets/110812339/0094d1a3-1dbd-4b51-b1f1-6e3191ba654d
+[Go to drive](https://drive.google.com/file/d/1r2r-0zly_zDtj3YQYjCWQ_65HVutuduc/view?usp=sharing)
 
 ## Installations
 1. Clone the repository: git clone https://github.com/gourabsingha1/Find-It.git
