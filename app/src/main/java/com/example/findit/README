@@ -2,6 +2,6 @@
 * AISearchActivity Crashing
 
 #Features
+* Show nearby products of chosen location.
 * Admin permission required before adding a product.
 * When product is added, an email will be sent to the user notifying them.
-* If no results are found from AISearch, then print so.

@@ -18,11 +18,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="50dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="50dp"
+        android:layout_marginEnd="40dp"
         android:layout_toEndOf="@+id/ivAISearchImage"
-        android:text="Search" />
+        android:text="Search using AI" />
 
     <TextView
         android:id="@+id/tvSearchTags"
@@ -63,6 +63,19 @@
             tools:listitem="@layout/item_product" />
 
     </ScrollView>
+
+    <TextView
+        android:id="@+id/tvAISearchNoProductsFound"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="No products found  :("
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
 
     <ProgressBar
         android:id="@+id/pbAISearch"

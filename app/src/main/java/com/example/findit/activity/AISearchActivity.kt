@@ -16,7 +16,6 @@ import com.example.findit.adapter.SearchTagsAdapter
 import com.example.findit.databinding.ActivityAiSearchBinding
 import com.example.findit.model.Products
 import com.google.ai.client.generativeai.GenerativeModel
-import com.google.ai.client.generativeai.type.asTextOrNull
 import com.google.ai.client.generativeai.type.content
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -50,6 +49,8 @@ class AISearchActivity : AppCompatActivity() {
 
         binding.btnAISearchSearch.setOnClickListener {
             binding.pbAISearch.visibility = View.VISIBLE
+            binding.tvAISearchNoProductsFound.visibility = View.INVISIBLE
+
             try{
                 val generativeModel = GenerativeModel(
                     modelName = "gemini-pro-vision",
@@ -125,21 +126,28 @@ class AISearchActivity : AppCompatActivity() {
                         }
                     }
 
-                    // Add the list to RecyclerView
-                    val productsAdapter = ProductsAdapter(productList)
-                    binding.rvAISearch.adapter = productsAdapter
-                    binding.tvSearchTags.visibility = View.VISIBLE
-                    binding.pbAISearch.visibility = View.INVISIBLE
+                    if(productList.size == 0) {
+                        binding.tvAISearchNoProductsFound.visibility = View.VISIBLE
+                        binding.tvSearchTags.visibility = View.VISIBLE
+                        binding.pbAISearch.visibility = View.INVISIBLE
+                    }
+                    else {
+                        // Add the list to RecyclerView
+                        val productsAdapter = ProductsAdapter(productList)
+                        binding.rvAISearch.adapter = productsAdapter
+                        binding.tvSearchTags.visibility = View.VISIBLE
+                        binding.pbAISearch.visibility = View.INVISIBLE
 
-                    // Open product details when clicked on product
-                    productsAdapter.onItemClick = { product ->
-                        Intent(this@AISearchActivity, ProductDetailsActivity::class.java).also { intent ->
-                            intent.putExtra("EXTRA_NAME", product.name)
-                            intent.putExtra("EXTRA_PRICE", product.price)
-                            intent.putExtra("EXTRA_LOCATION", product.location)
-                            intent.putExtra("EXTRA_DESCRIPTION", product.description)
-                            intent.putExtra("EXTRA_PRODUCT_ID", product.productId)
-                            startActivity(intent)
+                        // Open product details when clicked on product
+                        productsAdapter.onItemClick = { product ->
+                            Intent(this@AISearchActivity, ProductDetailsActivity::class.java).also { intent ->
+                                intent.putExtra("EXTRA_NAME", product.name)
+                                intent.putExtra("EXTRA_PRICE", product.price)
+                                intent.putExtra("EXTRA_LOCATION", product.location)
+                                intent.putExtra("EXTRA_DESCRIPTION", product.description)
+                                intent.putExtra("EXTRA_PRODUCT_ID", product.productId)
+                                startActivity(intent)
+                            }
                         }
                     }
                 }
