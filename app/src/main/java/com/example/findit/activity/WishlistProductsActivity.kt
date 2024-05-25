@@ -3,13 +3,10 @@ package com.example.findit.activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.findit.adapter.ProductsAdapter
 import com.example.findit.databinding.ActivityWishlistProductsBinding
 import com.example.findit.model.Products
@@ -33,39 +30,8 @@ class WishlistProductsActivity : AppCompatActivity() {
         // Hide action bar
         supportActionBar?.hide()
 
-        // RecyclerView
-        binding.rvWishlistProducts.layoutManager = LinearLayoutManager(this)
-
-        // Enable smooth ScrollView
-        binding.svWishlistProducts.isSmoothScrollingEnabled = true
-
         // load wishlist products
         loadWishlistProducts()
-
-        // Search products
-        binding.etWishlistProductsSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                try {
-                    val query = p0.toString()
-                    adapter.filter.filter(query)
-                } catch (e: Exception) {
-                    Toast.makeText(
-                        this@WishlistProductsActivity,
-                        "Search error: ${e.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-
-            }
-
-        })
     }
 
     private fun loadWishlistProducts() {
@@ -86,11 +52,7 @@ class WishlistProductsActivity : AppCompatActivity() {
                                         val product = productSnapshot.getValue(Products::class.java)
                                         productList.add(product!!)
                                     } catch (e: Exception) {
-                                        Toast.makeText(
-                                            this@WishlistProductsActivity,
-                                            e.message,
-                                            Toast.LENGTH_LONG
-                                        ).show()
+                                        Log.e("WishlistProductsActivityError", e.toString())
                                     }
                                 }
 
@@ -108,16 +70,15 @@ class WishlistProductsActivity : AppCompatActivity() {
                         binding.rvWishlistProducts.adapter = adapter
                         binding.pbWishlistProducts.visibility = View.INVISIBLE
 
+                        // Set total items
+                        binding.toolbarWishlist.subtitle = "${productList.size} items"
+
                         // Open product details when clicked on product
                         adapter.onItemClick = { product ->
                             Intent(
                                 this@WishlistProductsActivity,
                                 ProductDetailsActivity::class.java
                             ).also { intent ->
-                                intent.putExtra("EXTRA_NAME", product.name)
-                                intent.putExtra("EXTRA_PRICE", product.price)
-                                intent.putExtra("EXTRA_LOCATION", product.location)
-                                intent.putExtra("EXTRA_DESCRIPTION", product.description)
                                 intent.putExtra("EXTRA_PRODUCT_ID", product.productId)
                                 startActivity(intent)
                             }

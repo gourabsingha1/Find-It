@@ -5,19 +5,14 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.findit.R
 import com.example.findit.adapter.ProductsAdapter
 import com.example.findit.databinding.ActivityMyProductsBinding
@@ -42,34 +37,7 @@ class MyProductsActivity : AppCompatActivity() {
         // Hide action bar
         supportActionBar?.hide()
 
-        // RecyclerView
-        binding.rvMyProducts.layoutManager = LinearLayoutManager(this)
-
-        // Enable smooth ScrollView
-        binding.svMyProducts.isSmoothScrollingEnabled = true
-
         loadMyProducts()
-
-        // Search products
-        binding.etMyProductsSearch.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                try {
-                    val query = p0.toString()
-                    adapter.filter.filter(query)
-                } catch (e: Exception) {
-                    Toast.makeText(this@MyProductsActivity, "Search error: ${e.message}", Toast.LENGTH_LONG).show()
-                }
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-
-            }
-
-        })
     }
 
     private fun loadMyProducts() {
@@ -84,12 +52,15 @@ class MyProductsActivity : AppCompatActivity() {
                             val product = ds.getValue(Products::class.java)
                             productList.add(product!!)
                         } catch (e : Exception) {
-                            Toast.makeText(this@MyProductsActivity, e.message, Toast.LENGTH_LONG).show()
+                            Log.e("MyProductsActivityError", e.toString())
                         }
                     }
                     adapter = ProductsAdapter(productList)
                     binding.rvMyProducts.adapter = adapter
                     binding.pbMyProducts.visibility = View.INVISIBLE
+
+                    // Set total items
+                    binding.toolbarMyProducts.subtitle = "${productList.size} items"
 
                     // Open bottom sheet dialog when clicked on product
                     adapter.onItemClick = { product ->
@@ -129,10 +100,6 @@ class MyProductsActivity : AppCompatActivity() {
         tvMyProductsSeeProduct.setOnClickListener {
             dialog.dismiss()
             Intent(this, ProductDetailsActivity::class.java).also { intent ->
-                intent.putExtra("EXTRA_NAME", product.name)
-                intent.putExtra("EXTRA_PRICE", product.price)
-                intent.putExtra("EXTRA_LOCATION", product.location)
-                intent.putExtra("EXTRA_DESCRIPTION", product.description)
                 intent.putExtra("EXTRA_PRODUCT_ID", product.productId)
                 startActivity(intent)
             }
@@ -154,12 +121,16 @@ class MyProductsActivity : AppCompatActivity() {
 
         tvMyProductsDeleteDelete.setOnClickListener {
             dialog.dismiss()
-            FirebaseDatabase.getInstance().getReference("Products")
-                .child(productId).removeValue().addOnSuccessListener {
-                    Toast.makeText(this@MyProductsActivity, "Product deleted successfully", Toast.LENGTH_LONG).show()
-                }.addOnFailureListener {
-                    Toast.makeText(this@MyProductsActivity, "Couldn't delete", Toast.LENGTH_LONG).show()
-                }
+            try{
+                FirebaseDatabase.getInstance().getReference("Products")
+                    .child(productId).removeValue().addOnSuccessListener {
+                        Toast.makeText(this@MyProductsActivity, "Product deleted successfully", Toast.LENGTH_LONG).show()
+                    }.addOnFailureListener {
+                        Toast.makeText(this@MyProductsActivity, "Couldn't delete", Toast.LENGTH_LONG).show()
+                    }
+            } catch (e: Exception) {
+                Log.e("MyProductsActivityError", e.toString())
+            }
         }
 
         tvMyProductsDeleteCancel.setOnClickListener {

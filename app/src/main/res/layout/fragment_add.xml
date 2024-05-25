@@ -4,90 +4,144 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
     android:background="@color/white"
+    android:padding="20dp"
     tools:context=".fragments.AddFragment">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tfAddName"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        app:startIconDrawable="@drawable/baseline_drive_file_rename_outline_24">
+        android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/etAddName"
-            android:hint="Enter product name"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_height="match_parent">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tfAddPrice"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        app:startIconDrawable="@drawable/baseline_currency_rupee_24"
-        android:layout_below="@id/tfAddName">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tfAddName"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                app:startIconDrawable="@drawable/baseline_drive_file_rename_outline_24">
 
-        <EditText
-            android:id="@+id/etAddPrice"
-            android:hint="Enter price"
-            android:inputType="numberDecimal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </com.google.android.material.textfield.TextInputLayout>
+                <EditText
+                    android:id="@+id/etAddName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter product name"
+                    android:textSize="12sp" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tfAddLocation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        app:startIconDrawable="@drawable/baseline_location_on_24"
-        android:layout_below="@id/tfAddPrice">
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/etAddLocation"
-            android:hint="Enter Location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tfAddPrice"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tfAddName"
+                android:layout_marginTop="20dp"
+                app:startIconDrawable="@drawable/baseline_currency_rupee_24">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tfAddDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        app:startIconDrawable="@drawable/baseline_description_24"
-        android:layout_below="@id/tfAddLocation">
+                <EditText
+                    android:id="@+id/etAddPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter price"
+                    android:inputType="numberDecimal"
+                    android:textSize="12sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/etAddDescription"
-            android:hint="Enter Description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tfAddLocation"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tfAddPrice"
+                android:layout_marginTop="20dp"
+                android:hint="Location"
+                app:startIconDrawable="@drawable/baseline_location_on_24">
 
-    <ImageView
-        android:id="@+id/ivUploadImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/baseline_image_24"
-        android:layout_below="@id/tfAddDescription"/>
+                <AutoCompleteTextView
+                    android:id="@+id/acAddLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:textSize="12sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tfAddDescription"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tfAddLocation"
+                android:layout_marginTop="20dp"
+                app:startIconDrawable="@drawable/baseline_description_24">
+
+                <EditText
+                    android:id="@+id/etAddDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter Description"
+                    android:textSize="12sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/btnUseAI"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tfAddDescription"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="14dp"
+                android:backgroundTint="@color/green_200"
+                android:text="Use AI"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvPickUpto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tfAddDescription"
+                android:layout_marginTop="14dp"
+                android:text="Pick upto 10 images"
+                android:textSize="12sp" />
+
+            <ImageButton
+                android:id="@+id/ivAddImages"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvPickUpto"
+                android:layout_centerVertical="true"
+                android:background="@android:color/transparent"
+                android:padding="10dp"
+                android:src="@drawable/baseline_add_photo_alternate_24" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvImages"
+                android:layout_below="@id/ivAddImages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="82dp"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="4"
+                tools:listitem="@layout/row_images_picked" />
+
+        </RelativeLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSubmitProduct"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp"
         android:text="Submit"
-        app:cornerRadius="30dp"
-        android:layout_marginBottom="40dp"
-        android:layout_alignParentBottom="true"/>
+        android:textSize="12sp"
+        app:cornerRadius="30dp" />
 
     <ProgressBar
         android:id="@+id/pbAdd"

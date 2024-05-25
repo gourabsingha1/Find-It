@@ -14,6 +14,7 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.bumptech.glide.Glide
 import com.example.findit.R
 import com.example.findit.databinding.ActivityEditProductBinding
@@ -31,6 +32,9 @@ class EditProductActivity : AppCompatActivity() {
     private lateinit var progressDialog: ProgressDialog
     private var imageUri: Uri? = null
     private var productId = ""
+    private lateinit var address: String
+    private var latitude: Double = 0.0
+    private var longitude: Double = 0.0
 
     private companion object {
         private const val TAG = "EDIT_PRODUCT_TAG"
@@ -59,6 +63,12 @@ class EditProductActivity : AppCompatActivity() {
         // Load Data
         loadMyData()
 
+        // Get location
+        binding.acEditProductLocation.setOnClickListener {
+            val intent = Intent(this, LocationPickerActivity::class.java)
+            locationPickerActivityResultLauncher.launch(intent)
+        }
+
         binding.ivEditProductUploadImage.setOnClickListener {
             imagePickDialog()
         }
@@ -69,20 +79,36 @@ class EditProductActivity : AppCompatActivity() {
         }
     }
 
+    // Get location result
+    private val locationPickerActivityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                if (data != null) {
+                    latitude = data.getDoubleExtra("latitude", 0.0)
+                    longitude = data.getDoubleExtra("longitude", 0.0)
+                    address = data.getStringExtra("address") ?: ""
+                    binding.acEditProductLocation.setText(address)
+                } else {
+                    Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
     private fun loadMyData() {
         FirebaseDatabase.getInstance().getReference("Products")
             .child(productId).addValueEventListener(object: ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val name = "${snapshot.child("name").value}"
                     val price = "${snapshot.child("price").value}"
-                    val location = "${snapshot.child("location").value}"
+                    val address = "${snapshot.child("address").value}"
                     val description = "${snapshot.child("description").value}"
                     val imageUrl = "${snapshot.child("imageUrl").value}"
 
                     // set data
                     binding.etEditProductName.setText(name)
                     binding.etEditProductPrice.setText(price)
-                    binding.etEditProductLocation.setText(location)
+                    binding.acEditProductLocation.setText(address)
                     binding.etEditProductDescription.setText(description)
                     try {
                         Glide.with(this@EditProductActivity)
@@ -229,9 +255,11 @@ class EditProductActivity : AppCompatActivity() {
         val hashMap = HashMap<String, Any?>()
         hashMap["name"] = binding.etEditProductName.text.toString().trim()
         hashMap["price"] = binding.etEditProductPrice.text.toString().trim().toDouble()
-        hashMap["location"] = binding.etEditProductLocation.text.toString().trim()
         hashMap["description"] = binding.etEditProductDescription.text.toString().trim()
         hashMap["imageUrl"] = imageUrl
+        hashMap["latitude"] = latitude
+        hashMap["longitude"] = longitude
+        hashMap["address"] = address
 
         FirebaseDatabase.getInstance().getReference("Products")
             .child(productId).updateChildren(hashMap).addOnSuccessListener {

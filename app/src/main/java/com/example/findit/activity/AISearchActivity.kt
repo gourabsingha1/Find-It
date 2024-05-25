@@ -54,7 +54,7 @@ class AISearchActivity : AppCompatActivity() {
             try{
                 val generativeModel = GenerativeModel(
                     modelName = "gemini-pro-vision",
-                    apiKey = "AIzaSyBwS-5ig3w_zxg14n5c7PgP85Ak4wwCvSo"
+                    apiKey = "AIzaSyDOopZ9zt_n4ISQT35steAwbLZKeEbfms0"
                 )
                 val bitmap: Bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
                 CoroutineScope(Dispatchers.IO).launch {
@@ -139,10 +139,10 @@ class AISearchActivity : AppCompatActivity() {
                     // Open product details when clicked on product
                     productsAdapter.onItemClick = { product ->
                         Intent(this@AISearchActivity, ProductDetailsActivity::class.java).also { intent ->
-                            intent.putExtra("EXTRA_NAME", product.name)
-                            intent.putExtra("EXTRA_PRICE", product.price)
-                            intent.putExtra("EXTRA_LOCATION", product.location)
-                            intent.putExtra("EXTRA_DESCRIPTION", product.description)
+//                            intent.putExtra("EXTRA_NAME", product.name)
+//                            intent.putExtra("EXTRA_PRICE", product.price)
+//                            intent.putExtra("EXTRA_LOCATION", product.location)
+//                            intent.putExtra("EXTRA_DESCRIPTION", product.description)
                             intent.putExtra("EXTRA_PRODUCT_ID", product.productId)
                             startActivity(intent)
                         }

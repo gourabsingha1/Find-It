@@ -17,17 +17,16 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class ProductsAdapter(var productsFirebase: ArrayList<Products>
-): RecyclerView.Adapter<ProductsAdapter.ProductViewHolder>(), Filterable {
+class ProductsAdapter(var productsFirebase: ArrayList<Products>): RecyclerView.Adapter<ProductsAdapter.ProductViewHolder>(), Filterable {
 
     private var filter: FilterProduct? = null
-    private var filterList = productsFirebase
+    var filterList = productsFirebase
 
     inner class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvName: TextView = itemView.findViewById(R.id.tvName)
-        val tvPrice: TextView = itemView.findViewById(R.id.tvPrice)
-        val tvLocation: TextView = itemView.findViewById(R.id.tvLocation)
-        val ivImage: ImageView = itemView.findViewById(R.id.ivImage)
+        val tvItemProductName: TextView = itemView.findViewById(R.id.tvItemProductName)
+        val tvItemProductPrice: TextView = itemView.findViewById(R.id.tvItemProductPrice)
+        val tvItemProductAddress: TextView = itemView.findViewById(R.id.tvItemProductAddress)
+        val ivItemProductImage: ImageView = itemView.findViewById(R.id.ivItemProductImage)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
@@ -37,9 +36,9 @@ class ProductsAdapter(var productsFirebase: ArrayList<Products>
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val currentProduct = productsFirebase[position]
-        holder.tvName.text = currentProduct.name
-        holder.tvPrice.text = currentProduct.price.toString()
-        holder.tvLocation.text = currentProduct.location
+        holder.tvItemProductName.text = currentProduct.name
+        holder.tvItemProductPrice.text = "₹${currentProduct.price}"
+        holder.tvItemProductAddress.text = currentProduct.address
 
         // Load image from firebase storage
         loadProductImage(holder, currentProduct.productId!!)
@@ -59,10 +58,13 @@ class ProductsAdapter(var productsFirebase: ArrayList<Products>
 
     private fun loadProductImage(holder: ProductViewHolder, productId: String) {
         FirebaseDatabase.getInstance().getReference("Products")
-            .child(productId).addValueEventListener(object : ValueEventListener {
+            .child(productId).child("images").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val imageUrl = "${snapshot.child("imageUrl").value}"
-                Glide.with(holder.itemView).load(imageUrl).into(holder.ivImage)
+                for (ds in snapshot.children) {
+                    val imageUrl = "${ds.child("imageUrl").value}"
+                    Glide.with(holder.itemView).load(imageUrl).into(holder.ivItemProductImage)
+                    break
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {

@@ -73,16 +73,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:hint="Location"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tfEditProductPrice"
         app:startIconDrawable="@drawable/baseline_location_on_24">
 
-        <EditText
-            android:id="@+id/etEditProductLocation"
+        <AutoCompleteTextView
+            android:id="@+id/acEditProductLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Location" />
+            android:inputType="none" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="4dp"
+    android:paddingStart="4dp"
+    android:paddingEnd="4dp"
     tools:context=".activity.WishlistProductsActivity">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cvWishlistProductsSearch"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="10dp">
+        android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/etWishlistProductsSearch"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbarWishlist"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:drawablePadding="16dp"
-            android:padding="14dp"
-            android:hint="Search"
-            android:textSize="18sp"
-            app:drawableStartCompat="@drawable/baseline_search_24" />
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed|enterAlways"
+            app:subtitle="Total items"
+            app:subtitleTextAppearance="@color/black"
+            app:subtitleTextColor="@color/black"
+            app:title="Wishlist"
+            app:titleMarginStart="40dp"
+            app:titleTextColor="@color/black" />
 
-    </com.google.android.material.card.MaterialCardView>
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
-        android:id="@+id/svWishlistProducts"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/cvWishlistProductsSearch">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvWishlistProducts"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_product" />
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <ProgressBar
         android:id="@+id/pbWishlistProducts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
+        android:layout_gravity="center" />
 
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
