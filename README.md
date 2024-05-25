@@ -1,5 +1,5 @@
 # Find-It
-## [Download APK](https://drive.google.com/file/d/15oKJO2DGL7DqwajLBcj_i-prn6o2hDtQ/view)
+## [Download APK](https://drive.google.com/file/d/1kFlS6wIPTyK53bQNwBI6Wl18GD2oeZCu/view?usp=sharing)
 
 Find products at your nearest store.
 
@@ -18,4 +18,4 @@ Find products at your nearest store.
 1. Clone the repository: git clone https://github.com/gourabsingha1/Find-It.git
 2. Open the project in Android Studio
 3. Build and run the app on your Android device
-4. Alternatively, you can download the app from [here](https://drive.google.com/file/d/15oKJO2DGL7DqwajLBcj_i-prn6o2hDtQ/view)
+4. Alternatively, you can download the app from [here](https://drive.google.com/file/d/1kFlS6wIPTyK53bQNwBI6Wl18GD2oeZCu/view?usp=sharing)
