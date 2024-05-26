@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:padding="20dp"
+    android:paddingStart="20dp"
+    android:paddingTop="20dp"
+    android:paddingEnd="20dp"
     tools:context=".activity.LoginPhoneActivity">
 
     <TextView
@@ -13,18 +15,18 @@
         style="@style/TextAppearance.MaterialComponents.Body1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Log into your account"
         android:layout_centerHorizontal="true"
-        android:textSize="20sp"/>
+        android:text="Log into your account"
+        android:textSize="20sp" />
 
     <ImageView
         android:id="@+id/ivLoginPhoneBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/baseline_arrow_back_ios_24"
-        android:layout_marginTop="4dp"/>
+        android:layout_marginTop="4dp"
+        android:src="@drawable/baseline_arrow_back_ios_24" />
 
-<!--    Phone input layout-->
+    <!--    Phone input layout-->
     <RelativeLayout
         android:id="@+id/rlLoginPhonePhoneInput"
         android:layout_width="match_parent"
@@ -37,13 +39,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:minHeight="56dp"
             android:minWidth="60dp"
+            android:minHeight="56dp"
             app:ccp_autoDetectCountry="true"
             app:ccp_contentColor="@color/grey_200"
             app:ccp_rememberLastSelection="true"
             app:ccp_showFlag="false"
-            app:ccp_showNameCode="false"/>
+            app:ccp_showNameCode="false" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tfLoginPhonePhone"
@@ -63,23 +65,23 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLoginPhoneSendOtp"
-            android:layout_width="210dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_below="@id/tfLoginPhonePhone"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:text="Send OTP"
-            app:cornerRadius="30dp"/>
+            app:cornerRadius="30dp" />
 
     </RelativeLayout>
 
-<!--    OTP Layout-->
+    <!--    OTP Layout-->
     <RelativeLayout
         android:id="@+id/rlOtpInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="52dp"
-        android:visibility="invisible">
+        android:visibility="visible">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tfLoginPhoneOtp"
@@ -98,7 +100,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLoginPhoneVerify"
-            android:layout_width="210dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tfLoginPhoneOtp"
             android:layout_centerHorizontal="true"
@@ -107,14 +109,27 @@
             app:cornerRadius="30dp" />
 
         <TextView
-            android:id="@+id/tvLoginPhoneResendOtp"
+            android:id="@+id/tvLoginPhoneDidntReceiveOtp"
             style="@style/TextAppearance.MaterialComponents.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/btnLoginPhoneVerify"
-            android:layout_centerHorizontal="true"
+            android:layout_alignEnd="@id/tvLoginPhoneResendOtp"
+            android:layout_marginEnd="50dp"
             android:layout_marginTop="10dp"
-            android:text="Didn't Receive OTP? Resend" />
+            android:text="Didn't Receive OTP?" />
+
+        <TextView
+            android:id="@+id/tvLoginPhoneResendOtp"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="124dp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/btnLoginPhoneVerify"
+            android:layout_marginTop="10dp"
+            android:textColor="#2196F3"
+            android:text="Resend" />
 
     </RelativeLayout>
 

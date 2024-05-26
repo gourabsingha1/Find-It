@@ -11,8 +11,9 @@
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivAccountProfilePic"
         android:layout_width="80dp"
-        android:layout_marginTop="20dp"
         android:layout_height="80dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
         android:background="@color/grey_200"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_person_white"
@@ -23,8 +24,9 @@
         style="@style/TextAppearance.MaterialComponents.Body1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
         android:layout_toEndOf="@+id/ivAccountProfilePic"
         android:gravity="center"
         android:textSize="20sp"
@@ -38,6 +40,7 @@
         android:layout_below="@id/tvAccountName"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_toEndOf="@+id/ivAccountProfilePic"
         android:gravity="center"
         android:textSize="12sp"
@@ -51,82 +54,142 @@
         android:layout_below="@id/tvAccountEmail"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_toEndOf="@+id/ivAccountProfilePic"
         android:gravity="center"
         android:textSize="12sp"
         tools:text="+919876543210" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cvAccountMyProducts"
+    <LinearLayout
+        android:id="@+id/llAccount1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvAccountPhone"
+        android:layout_marginTop="40dp"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cvAccountMyProducts"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/grey_100"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="20dp">
+
+            <TextView
+                android:id="@+id/tvAccountMyProducts"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/baseline_shopping_bag_24"
+                android:drawablePadding="16dp"
+                android:gravity="center_vertical"
+                android:padding="14dp"
+                android:text="My Products"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cvAccountWishlist"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/grey_100"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="20dp">
+
+            <TextView
+                android:id="@+id/tvAccountWishlist"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/baseline_favorite_24"
+                android:drawablePadding="16dp"
+                android:gravity="center_vertical"
+                android:padding="14dp"
+                android:text="Wishlist"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/llAccount1"
         android:layout_marginTop="20dp"
-        android:clickable="true"
-        android:focusable="true"
-        app:cardCornerRadius="10dp">
+        android:orientation="horizontal"
+        android:weightSum="2">
 
-        <TextView
-            android:id="@+id/tvAccountMyProducts"
-            style="@style/TextAppearance.MaterialComponents.Body1"
-            android:layout_width="match_parent"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cvAccountEditProfile"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/baseline_shopping_bag_24"
-            android:drawableEnd="@drawable/baseline_navigate_next_24"
-            android:drawablePadding="16dp"
-            android:gravity="center_vertical"
-            android:padding="14dp"
-            android:text="My Products"
-            android:textSize="16sp" />
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/grey_100"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="20dp">
 
-    </com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:id="@+id/tvAccountEditProfile"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/baseline_edit_24"
+                android:drawablePadding="16dp"
+                android:gravity="center_vertical"
+                android:padding="14dp"
+                android:text="Edit Profile"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cvAccountWishlist"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/cvAccountMyProducts"
-        android:clickable="true"
-        android:focusable="true"
-        app:cardCornerRadius="10dp">
+        </com.google.android.material.card.MaterialCardView>
 
-        <TextView
-            android:id="@+id/tvAccountWishlist"
-            style="@style/TextAppearance.MaterialComponents.Body1"
-            android:layout_width="match_parent"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cvAccountLogout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/baseline_favorite_24"
-            android:drawableEnd="@drawable/baseline_navigate_next_24"
-            android:drawablePadding="16dp"
-            android:gravity="center_vertical"
-            android:padding="14dp"
-            android:text="Wishlist"
-            android:textSize="16sp" />
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/grey_100"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="20dp">
 
-    </com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:id="@+id/tvAccountLogout"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/baseline_power_settings_new_24"
+                android:drawablePadding="16dp"
+                android:gravity="center_vertical"
+                android:padding="14dp"
+                android:text="Logout"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cvAccountSettings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/cvAccountWishlist"
-        android:clickable="true"
-        android:focusable="true"
-        app:cardCornerRadius="10dp">
+        </com.google.android.material.card.MaterialCardView>
 
-        <TextView
-            android:id="@+id/tvAccountSettings"
-            style="@style/TextAppearance.MaterialComponents.Body1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/baseline_settings_24"
-            android:drawableEnd="@drawable/baseline_navigate_next_24"
-            android:drawablePadding="16dp"
-            android:gravity="center_vertical"
-            android:padding="14dp"
-            android:text="Settings"
-            android:textSize="16sp" />
-
-    </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
 
 </RelativeLayout>

@@ -1,19 +1,28 @@
 package com.example.findit.activity
 
+import android.Manifest
+import android.app.Activity
+import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.Menu
 import android.view.View
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.findit.adapter.ImagesPickedAdapter
 import com.example.findit.adapter.ProductsAdapter
 import com.example.findit.adapter.SearchTagsAdapter
 import com.example.findit.databinding.ActivityAiSearchBinding
+import com.example.findit.model.ImagesPicked
 import com.example.findit.model.Products
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
@@ -40,11 +49,10 @@ class AISearchActivity : AppCompatActivity() {
 
         // RecyclerView
         binding.rvAISearchTags.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.rvAISearch.layoutManager = LinearLayoutManager(this)
 
         // Open gallery
         binding.ivAISearchImage.setOnClickListener {
-            resultLauncher.launch("image/*")
+            showImagePickOptions()
         }
 
         binding.btnAISearchSearch.setOnClickListener {
@@ -60,47 +68,133 @@ class AISearchActivity : AppCompatActivity() {
                 CoroutineScope(Dispatchers.IO).launch {
                     val inputContent = content {
                         image(bitmap)
-                        text("Print JUST the name of the thing in first line. Then print few similar names in next lines.")
+                        text("Print JUST the name of the thing, then maximum 14 unique items similar to it. I just want the items in a single line separated by semi colon.")
                     }
                     val response = generativeModel.generateContent(inputContent)
                     withContext(Dispatchers.Main) {
-                        // Add AI generated names in the array, to search using these names
-                        val names = sentenceToWords(response.text!!)
-                        // Add names to search tags list
+                        val names = extractItems(response.text!!)
                         binding.rvAISearchTags.adapter = SearchTagsAdapter(names)
                         loadProducts(names)
                     }
                 }
             } catch (e : Exception) {
-                Toast.makeText(this, "Server error", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Pick a photo", Toast.LENGTH_SHORT).show()
                 binding.pbAISearch.visibility = View.INVISIBLE
             }
         }
     }
 
-    // Set image in app
-    private var resultLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) {
-        imageUri = it
-        binding.ivAISearchImage.setImageURI(it)
-    }
-
-    private fun sentenceToWords(text: String) : ArrayList<String> {
-        val names = ArrayList<String>()
-        var i = 0
-        while (i < text.length) {
-            if (text[i].isLetter()) {
-                val j = i
-                while (i < text.length && (text[i].isLetter() || text[i].isDigit() || text[i] == ' ')) {
-                    i++
+    private fun showImagePickOptions() {
+        val popupMenu = PopupMenu(this, binding.ivAISearchImage)
+        popupMenu.menu.add(Menu.NONE, 1, 1, "Camera")
+        popupMenu.menu.add(Menu.NONE, 2, 2, "Gallery")
+        popupMenu.show()
+        popupMenu.setOnMenuItemClickListener { item ->
+            val itemId = item.itemId
+            if (itemId == 1) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    val cameraPermissions = arrayOf(Manifest.permission.CAMERA)
+                    requestCameraPermission.launch(cameraPermissions)
+                } else {
+                    val cameraPermissions = arrayOf(
+                        Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                    requestCameraPermission.launch(cameraPermissions)
                 }
-                val name = text.substring(j, i).trim().toLowerCase(Locale.ROOT)
-                if(name.length < 20) {
-                    names.add(name)
+            } else if (itemId == 2) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    pickImageGallery()
+                } else {
+                    val storagePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    requestStoragePermission.launch(storagePermission)
                 }
             }
+            true
+        }
+    }
+
+    private val requestStoragePermission = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            pickImageGallery()
+        } else {
+            Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun pickImageGallery() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        galleryActivityResultLauncher.launch(intent)
+    }
+
+    private val galleryActivityResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data = result.data
+            imageUri = data!!.data
+            binding.ivAISearchImage.setImageURI(imageUri)
+            binding.tvPickAPhoto.visibility = View.INVISIBLE
+        } else {
+            Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private val requestCameraPermission = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { result ->
+        var areAllGranted = true
+        for (isGranted in result.values) {
+            areAllGranted = areAllGranted && isGranted
+        }
+        if (areAllGranted) {
+            pickImageCamera()
+        } else {
+            Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun pickImageCamera() {
+        val contentValues = ContentValues()
+        contentValues.put(MediaStore.Images.Media.TITLE, "TEMP_IMAGE_TITLE")
+        contentValues.put(MediaStore.Images.Media.DESCRIPTION, "TEMP_IMAGE_DESCRIPTION")
+        imageUri = contentResolver?.insert(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues
+        )
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+        cameraActivityResultLauncher.launch(intent)
+    }
+
+    private val cameraActivityResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val timestamp = "${System.currentTimeMillis()}"
+            val imagePicked = ImagesPicked(timestamp, imageUri, null, false)
+            binding.ivAISearchImage.setImageURI(imageUri)
+            binding.tvPickAPhoto.visibility = View.INVISIBLE
+        } else {
+            Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // Add AI generated items in the array
+    private fun extractItems(text: String): ArrayList<String> {
+        val res = ArrayList<String>()
+        val n = text.length
+        var i = 0
+        while (i < n) {
+            var name = ""
+            while (i < n && text[i] != ';') {
+                name += text[i++]
+            }
+            res.add(name.trim())
             i++
         }
-        return names
+        return res
     }
 
     // Load products
@@ -139,10 +233,6 @@ class AISearchActivity : AppCompatActivity() {
                     // Open product details when clicked on product
                     productsAdapter.onItemClick = { product ->
                         Intent(this@AISearchActivity, ProductDetailsActivity::class.java).also { intent ->
-//                            intent.putExtra("EXTRA_NAME", product.name)
-//                            intent.putExtra("EXTRA_PRICE", product.price)
-//                            intent.putExtra("EXTRA_LOCATION", product.location)
-//                            intent.putExtra("EXTRA_DESCRIPTION", product.description)
                             intent.putExtra("EXTRA_PRODUCT_ID", product.productId)
                             startActivity(intent)
                         }

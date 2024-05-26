@@ -27,7 +27,8 @@
             android:exported="false" />
         <activity
             android:name=".activity.EditProductActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.AISearchActivity"
             android:exported="false"
@@ -48,15 +49,15 @@
         <activity
             android:name=".activity.LogInEmailActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.LoginPhoneActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.SignUpEmailActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.ProductDetailsActivity"
             android:exported="false"

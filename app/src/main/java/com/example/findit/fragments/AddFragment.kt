@@ -273,7 +273,7 @@ class AddFragment : Fragment() {
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 val searchQuery =
-                    "Maximum 9 items similar to $productName. I just want the items in a single line separated by semi colon."
+                    "Maximum 9 unique items similar to $productName. I just want the items in a single line separated by semi colon."
                 val response = generativeModel.generateContent(searchQuery)
                 withContext(Dispatchers.Main) {
                     uploadProduct(extractItems(productName, response.text!!))

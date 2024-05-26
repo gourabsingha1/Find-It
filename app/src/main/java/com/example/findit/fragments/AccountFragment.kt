@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.findit.activity.SettingsActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -15,6 +14,7 @@ import com.google.firebase.database.ValueEventListener
 import android.util.Log
 import com.bumptech.glide.Glide
 import com.example.findit.R
+import com.example.findit.activity.EditProfileActivity
 import com.example.findit.activity.MyProductsActivity
 import com.example.findit.activity.WishlistProductsActivity
 import com.example.findit.databinding.FragmentAccountBinding
@@ -46,9 +46,15 @@ class AccountFragment : Fragment() {
             startActivity(Intent(requireContext(), WishlistProductsActivity::class.java))
         }
 
-        // Settings
-        binding.tvAccountSettings.setOnClickListener {
-            startActivity(Intent(requireContext(), SettingsActivity::class.java))
+        // Edit Profile
+        binding.tvAccountEditProfile.setOnClickListener {
+            startActivity(Intent(requireContext(), EditProfileActivity::class.java))
+        }
+
+        // Log out
+        binding.tvAccountLogout.setOnClickListener {
+            val dialog = LogOutFragment()
+            dialog.show(activity?.supportFragmentManager!!, "LogOutDialogFragment")
         }
 
         return binding.root
@@ -57,7 +63,7 @@ class AccountFragment : Fragment() {
     private fun loadMyData() {
         val firebaseAuth = FirebaseAuth.getInstance()
         val ref = FirebaseDatabase.getInstance().getReference("Users")
-        ref.child(firebaseAuth.uid!!).addValueEventListener(object: ValueEventListener {
+        ref.child(firebaseAuth.uid!!).addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
                 // get data
@@ -76,11 +82,9 @@ class AccountFragment : Fragment() {
                 binding.tvAccountEmail.text = email
                 binding.tvAccountPhone.text = phone
                 try {
-                    Glide.with(requireContext())
-                        .load(profileImageUrl)
-                        .placeholder(R.drawable.ic_person_white)
-                        .into(binding.ivAccountProfilePic)
-                } catch (e : Exception) {
+                    Glide.with(requireContext()).load(profileImageUrl)
+                        .placeholder(R.drawable.ic_person_white).into(binding.ivAccountProfilePic)
+                } catch (e: Exception) {
                     Log.e(TAG, "onDataChange: ", e)
                 }
             }

@@ -3,7 +3,7 @@
     <style name="Theme.FindIt" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/grey_500</item>
-        <item name="colorPrimaryVariant">@color/grey_500</item>
+        <item name="colorPrimaryVariant">@color/grey_100</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/black</item>

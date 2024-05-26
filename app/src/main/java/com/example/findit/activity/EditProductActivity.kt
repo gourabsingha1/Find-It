@@ -1,5 +1,6 @@
 package com.example.findit.activity
 
+import android.Manifest
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.ContentValues
@@ -10,21 +11,19 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
+import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
-import com.bumptech.glide.Glide
-import com.example.findit.R
+import com.example.findit.adapter.ImagesPickedAdapter
 import com.example.findit.databinding.ActivityEditProductBinding
-import com.google.firebase.auth.FirebaseAuth
+import com.example.findit.model.ImagesPicked
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
-import java.lang.Exception
 
 class EditProductActivity : AppCompatActivity() {
 
@@ -35,6 +34,8 @@ class EditProductActivity : AppCompatActivity() {
     private lateinit var address: String
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
+    private lateinit var imagePickedAdapter: ImagesPickedAdapter
+    private var imagePickedArraylist: ArrayList<ImagesPicked> = ArrayList()
 
     private companion object {
         private const val TAG = "EDIT_PRODUCT_TAG"
@@ -53,7 +54,7 @@ class EditProductActivity : AppCompatActivity() {
         progressDialog.setCanceledOnTouchOutside(false)
 
         // Go back
-        binding.ivEditProductBack.setOnClickListener {
+        binding.ivBackEditProduct.setOnClickListener {
             onBackPressed()
         }
 
@@ -64,18 +65,18 @@ class EditProductActivity : AppCompatActivity() {
         loadMyData()
 
         // Get location
-        binding.acEditProductLocation.setOnClickListener {
+        binding.acUpdateLocation.setOnClickListener {
             val intent = Intent(this, LocationPickerActivity::class.java)
             locationPickerActivityResultLauncher.launch(intent)
         }
 
-        binding.ivEditProductUploadImage.setOnClickListener {
-            imagePickDialog()
+        binding.ivAddImagesEditProduct.setOnClickListener {
+            showImagePickOptions()
         }
 
         // Update product
-        binding.btnEditProductUpdate.setOnClickListener {
-            uploadProductImageStorage()
+        binding.btnUpdateEditProduct.setOnClickListener {
+            updateProductDb()
         }
     }
 
@@ -88,7 +89,7 @@ class EditProductActivity : AppCompatActivity() {
                     latitude = data.getDoubleExtra("latitude", 0.0)
                     longitude = data.getDoubleExtra("longitude", 0.0)
                     address = data.getStringExtra("address") ?: ""
-                    binding.acEditProductLocation.setText(address)
+                    binding.acUpdateLocation.setText(address)
                 } else {
                     Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
                 }
@@ -96,113 +97,89 @@ class EditProductActivity : AppCompatActivity() {
         }
 
     private fun loadMyData() {
-        FirebaseDatabase.getInstance().getReference("Products")
-            .child(productId).addValueEventListener(object: ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val name = "${snapshot.child("name").value}"
-                    val price = "${snapshot.child("price").value}"
-                    val address = "${snapshot.child("address").value}"
-                    val description = "${snapshot.child("description").value}"
-                    val imageUrl = "${snapshot.child("imageUrl").value}"
+        val ref = FirebaseDatabase.getInstance().getReference("Products").child(productId)
+        ref.addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val name = "${snapshot.child("name").value}"
+                val price = "${snapshot.child("price").value}"
+                val description = "${snapshot.child("description").value}"
+                address = "${snapshot.child("address").value}"
 
-                    // set data
-                    binding.etEditProductName.setText(name)
-                    binding.etEditProductPrice.setText(price)
-                    binding.acEditProductLocation.setText(address)
-                    binding.etEditProductDescription.setText(description)
+                // set data
+                binding.etUpdateName.setText(name)
+                binding.etUpdatePrice.setText(price)
+                binding.acUpdateLocation.setText(address)
+                binding.etUpdateDescription.setText(description)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(TAG, error.message)
+            }
+
+        })
+
+        // Load images
+        ref.child("images").addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                imagePickedArraylist.clear()
+                for(ds in snapshot.children) {
                     try {
-                        Glide.with(this@EditProductActivity)
-                            .load(imageUrl)
-                            .placeholder(R.drawable.ic_person_white)
-                            .into(binding.ivEditProductUploadImage)
+                        val imagePicked = ds.getValue(ImagesPicked::class.java)
+                        imagePickedArraylist.add(imagePicked!!)
                     } catch (e : Exception) {
-                        Log.e(TAG, "onDataChange: ", e)
+                        Log.e(TAG, e.toString())
                     }
                 }
+                imagePickedAdapter = ImagesPickedAdapter(this@EditProductActivity, imagePickedArraylist)
+                binding.rvImagesEditProduct.adapter = imagePickedAdapter
+            }
 
-                override fun onCancelled(error: DatabaseError) {
-                    Log.e(TAG, error.message)
-                }
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(TAG, error.message)
+            }
 
         })
     }
 
 
-    // **** Getting and setting image stuffs ****
-    private fun imagePickDialog() {
-        // Show popupmenu when clicked on imageView
-        val popupMenu = PopupMenu(this, binding.ivEditProductUploadImage)
+    private fun showImagePickOptions() {
+        val popupMenu = PopupMenu(this, binding.ivAddImagesEditProduct)
         popupMenu.menu.add(Menu.NONE, 1, 1, "Camera")
         popupMenu.menu.add(Menu.NONE, 2, 2, "Gallery")
         popupMenu.show()
-
         popupMenu.setOnMenuItemClickListener { item ->
             val itemId = item.itemId
-            if(itemId == 1) {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    requestCameraPermissions.launch(arrayOf(android.Manifest.permission.CAMERA))
+            if (itemId == 1) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    val cameraPermissions = arrayOf(Manifest.permission.CAMERA)
+                    requestCameraPermission.launch(cameraPermissions)
                 } else {
-                    requestCameraPermissions.launch(arrayOf(android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                    val cameraPermissions = arrayOf(
+                        Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                    requestCameraPermission.launch(cameraPermissions)
                 }
-            } else if(itemId == 2) {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            } else if (itemId == 2) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     pickImageGallery()
                 } else {
-                    requestStoragePermissions.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    val storagePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    requestStoragePermission.launch(storagePermission)
                 }
             }
             true
         }
     }
 
-    private val requestCameraPermissions =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
-            var areAllGranted = true
-            for(isGranted in result.values) {
-                areAllGranted = areAllGranted && isGranted
-            }
-            if(areAllGranted) {
-                pickImageCamera()
-            } else {
-                Toast.makeText(this, "Camera or Storage or both permissions denied", Toast.LENGTH_LONG).show()
-            }
+    private val requestStoragePermission = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            pickImageGallery()
+        } else {
+            Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
         }
-
-    private fun pickImageCamera() {
-        val contentValues = ContentValues()
-        contentValues.put(MediaStore.Images.Media.TITLE, "Temp_image_title")
-        contentValues.put(MediaStore.Images.Media.DESCRIPTION, "Temp_image_description")
-
-        imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-        cameraActivityResultlauncher.launch(intent)
     }
-
-    private val cameraActivityResultlauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if(result.resultCode == Activity.RESULT_OK) {
-                try {
-                    Glide.with(this)
-                        .load(imageUri)
-                        .placeholder(R.drawable.ic_person_white)
-                        .into(binding.ivEditProductUploadImage)
-                } catch (e : Exception) {
-                    Log.e(TAG, "cameraActivityResultLauncher: ", e)
-                }
-            } else {
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show()
-            }
-        }
-
-    private val requestStoragePermissions =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if(isGranted) {
-                pickImageGallery()
-            } else {
-                Toast.makeText(this, "Storage permission denied", Toast.LENGTH_LONG).show()
-            }
-        }
 
     private fun pickImageGallery() {
         val intent = Intent(Intent.ACTION_PICK)
@@ -210,53 +187,74 @@ class EditProductActivity : AppCompatActivity() {
         galleryActivityResultLauncher.launch(intent)
     }
 
-    private val galleryActivityResultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if(result.resultCode == Activity.RESULT_OK) {
-                val data = result.data
-                imageUri = data!!.data
-                try {
-                    Glide.with(this)
-                        .load(imageUri)
-                        .placeholder(R.drawable.ic_person_white)
-                        .into(binding.ivEditProductUploadImage)
-                } catch (e : Exception) {
-                    Log.e(TAG, "cameraActivityResultLauncher: ", e)
-                }
-            } else {
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show()
-            }
+    private val galleryActivityResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data = result.data
+            imageUri = data!!.data
+            val timestamp = "${System.currentTimeMillis()}"
+            val imagePicked = ImagesPicked(timestamp, imageUri, null, false)
+            imagePickedArraylist.add(imagePicked)
+            loadImages()
+        } else {
+            Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
         }
-
-    private fun uploadProductImageStorage() {
-        progressDialog.setMessage("Uploading")
-        progressDialog.show()
-
-        FirebaseStorage.getInstance().getReference("Images")
-            .child(productId).putFile(imageUri!!).addOnSuccessListener { taskSnapshot ->
-                val uriTask = taskSnapshot.storage.downloadUrl
-                while(!uriTask.isSuccessful);
-                val imageUrl = uriTask.result.toString()
-                if(uriTask.isSuccessful) {
-                    // Set imageUrl to firebase realtime
-                    updateProductDb(imageUrl)
-                }
-            }.addOnFailureListener { e ->
-                Log.e(TAG, "uploadProfileImageStorage: ", e)
-                progressDialog.dismiss()
-                Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
-            }
     }
 
-    private fun updateProductDb(imageUrl: String?) {
+    // Load images picked
+    private fun loadImages() {
+        imagePickedAdapter = ImagesPickedAdapter(this, imagePickedArraylist)
+        binding.rvImagesEditProduct.adapter = imagePickedAdapter
+    }
+
+    private val requestCameraPermission = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { result ->
+        var areAllGranted = true
+        for (isGranted in result.values) {
+            areAllGranted = areAllGranted && isGranted
+        }
+        if (areAllGranted) {
+            pickImageCamera()
+        } else {
+            Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun pickImageCamera() {
+        val contentValues = ContentValues()
+        contentValues.put(MediaStore.Images.Media.TITLE, "TEMP_IMAGE_TITLE")
+        contentValues.put(MediaStore.Images.Media.DESCRIPTION, "TEMP_IMAGE_DESCRIPTION")
+        imageUri = contentResolver?.insert(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues
+        )
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+        cameraActivityResultLauncher.launch(intent)
+    }
+
+    private val cameraActivityResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val timestamp = "${System.currentTimeMillis()}"
+            val imagePicked = ImagesPicked(timestamp, imageUri, null, false)
+            imagePickedArraylist.add(imagePicked)
+            loadImages()
+        } else {
+            Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun updateProductDb() {
         progressDialog.setMessage("Updating user info")
         progressDialog.show()
 
         val hashMap = HashMap<String, Any?>()
-        hashMap["name"] = binding.etEditProductName.text.toString().trim()
-        hashMap["price"] = binding.etEditProductPrice.text.toString().trim().toDouble()
-        hashMap["description"] = binding.etEditProductDescription.text.toString().trim()
-        hashMap["imageUrl"] = imageUrl
+        hashMap["name"] = binding.etUpdateName.text.toString().trim()
+        hashMap["price"] = binding.etUpdatePrice.text.toString().trim().toDouble()
+        hashMap["description"] = binding.etUpdateDescription.text.toString().trim()
         hashMap["latitude"] = latitude
         hashMap["longitude"] = longitude
         hashMap["address"] = address
@@ -264,12 +262,46 @@ class EditProductActivity : AppCompatActivity() {
         FirebaseDatabase.getInstance().getReference("Products")
             .child(productId).updateChildren(hashMap).addOnSuccessListener {
                 progressDialog.dismiss()
-                Toast.makeText(this, "Profile Updated", Toast.LENGTH_LONG).show()
-                imageUri = null
+                uploadImagesToStorage(productId)
             }.addOnFailureListener { e ->
                 Log.e(TAG, "updateUserInfoDb: ", e)
                 progressDialog.dismiss()
                 Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
             }
+    }
+
+    // Upload product image to firebase storage
+    private fun uploadImagesToStorage(productId: String) {
+        for (i in imagePickedArraylist.indices) {
+            val imagePicked = imagePickedArraylist[i]
+            val imageName = imagePicked.id
+            val filePathAndName = "Products/$imageName"
+            val imageIndexForProgress = i + 1
+            val storageRef = FirebaseStorage.getInstance().getReference(filePathAndName)
+            storageRef.putFile(imagePicked.imageUri!!).addOnProgressListener { snapshot ->
+                val progress = 100.0 * snapshot.bytesTransferred / snapshot.totalByteCount
+                val message =
+                    "Uploading $imageIndexForProgress of ${imagePickedArraylist.size} images. Progress ${progress.toInt()}%"
+                progressDialog.setMessage(message)
+                progressDialog.show()
+            }.addOnSuccessListener { taskSnapshot ->
+                val uriTask = taskSnapshot.storage.downloadUrl
+                while (!uriTask.isSuccessful);
+                val uploadedImageUrl = uriTask.result
+                if (uriTask.isSuccessful) {
+                    val hashMap = HashMap<String, Any>()
+                    hashMap["id"] = "${imagePicked.id}"
+                    hashMap["imageUrl"] = "$uploadedImageUrl"
+                    val ref = FirebaseDatabase.getInstance().getReference("Products")
+                    ref.child(productId).child("images").child(imageName)
+                        .updateChildren(hashMap)
+                }
+                progressDialog.dismiss()
+                Toast.makeText(this, "Profile Updated", Toast.LENGTH_LONG).show()
+            }.addOnFailureListener {
+                Log.e("", it.toString())
+                progressDialog.dismiss()
+            }
+        }
     }
 }

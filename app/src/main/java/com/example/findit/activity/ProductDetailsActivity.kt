@@ -94,7 +94,7 @@ class ProductDetailsActivity : AppCompatActivity() {
                         if (snapshot.exists()) {
                             if (snapshot.child(productId).exists()) {
                                 alreadyInWishlist = true
-                                binding.ivProductDetailsWishlist.setImageResource(R.drawable.baseline_favorite_24)
+                                binding.ivProductDetailsWishlist.setImageResource(R.drawable.baseline_favorite_24_red)
                             }
                         }
                     }
@@ -119,7 +119,7 @@ class ProductDetailsActivity : AppCompatActivity() {
                 .addOnSuccessListener {
                     Toast.makeText(this, "Added to wishlist", Toast.LENGTH_LONG).show()
                     alreadyInWishlist = true
-                    binding.ivProductDetailsWishlist.setImageResource(R.drawable.baseline_favorite_24)
+                    binding.ivProductDetailsWishlist.setImageResource(R.drawable.baseline_favorite_24_red)
                 }.addOnFailureListener { e ->
                     Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
                 }

@@ -9,9 +9,21 @@
 
     <ImageView
         android:id="@+id/ivAISearchImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/baseline_image_24" />
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/baseline_add_photo_alternate_24_grey" />
+
+    <TextView
+        android:id="@+id/tvPickAPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ivAISearchImage"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="4dp"
+        android:text="Pick a photo"
+        android:textColor="@color/black" />
 
     <Button
         android:id="@+id/btnAISearchSearch"
@@ -22,20 +34,22 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="40dp"
         android:layout_toEndOf="@+id/ivAISearchImage"
-        android:text="Search using AI" />
+        android:text="Search with Gemini" />
 
     <TextView
         android:id="@+id/tvSearchTags"
+        style="@style/TextAppearance.Material3.HeadlineLarge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/ivAISearchImage"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
         android:text="Search tags: "
+        android:textColor="@color/black"
         android:textSize="18sp"
-        android:textStyle="bold"
         android:visibility="invisible" />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/svSearchTags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,9 +62,10 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             tools:listitem="@layout/item_search_tags" />
-    </ScrollView>
 
-    <ScrollView
+    </androidx.core.widget.NestedScrollView>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/svSearchTags"
@@ -58,31 +73,31 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvAISearch"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:listitem="@layout/item_product" />
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <TextView
         android:id="@+id/tvAISearchNoProductsFound"
+        style="@style/TextAppearance.Material3.HeadlineLarge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_centerInParent="true"
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="No products found  :("
+        android:textColor="@color/black"
         android:textSize="18sp"
-        android:textStyle="bold"
         android:visibility="invisible" />
 
     <ProgressBar
         android:id="@+id/pbAISearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_centerInParent="true"
         android:visibility="invisible" />
 
 </RelativeLayout>

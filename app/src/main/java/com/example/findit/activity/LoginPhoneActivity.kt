@@ -143,7 +143,7 @@ class LoginPhoneActivity : AppCompatActivity() {
 
             override fun onCodeSent(verificationId: String, token: ForceResendingToken) {
                 // Visibility
-                binding.etLoginPhonePhone.visibility = View.GONE
+                binding.rlLoginPhonePhoneInput.visibility = View.GONE
                 binding.rlOtpInput.visibility = View.VISIBLE
 
                 mVerificationId = verificationId
