@@ -12,7 +12,7 @@ Find products at your nearest store.
 - Edit your profile
 
 ## App Preview
-[Go to drive](https://drive.google.com/file/d/1gIh7-uwl2AU4NygTl1GmXUt9BQNu_vNf/view?usp=drive_link)
+https://github.com/gourabsingha1/Find-It/assets/110812339/9fb17118-6a66-4405-aea1-4ac0c16e947e
 
 ## Installations
 1. Clone the repository: git clone https://github.com/gourabsingha1/Find-It.git
