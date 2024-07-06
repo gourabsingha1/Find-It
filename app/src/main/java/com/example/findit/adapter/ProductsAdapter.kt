@@ -17,7 +17,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class ProductsAdapter(var productsFirebase: ArrayList<Products>): RecyclerView.Adapter<ProductsAdapter.ProductViewHolder>(), Filterable {
+class ProductsAdapter(var productsFirebase: ArrayList<Products>, private val path: String): RecyclerView.Adapter<ProductsAdapter.ProductViewHolder>(), Filterable {
 
     private var filter: FilterProduct? = null
     var filterList = productsFirebase
@@ -57,21 +57,21 @@ class ProductsAdapter(var productsFirebase: ArrayList<Products>): RecyclerView.A
     var onItemClick : ((Products) -> Unit)? = null
 
     private fun loadProductImage(holder: ProductViewHolder, productId: String) {
-        FirebaseDatabase.getInstance().getReference("Products")
+        FirebaseDatabase.getInstance().getReference(path)
             .child(productId).child("images").addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (ds in snapshot.children) {
-                    val imageUrl = "${ds.child("imageUrl").value}"
-                    Glide.with(holder.itemView).load(imageUrl).into(holder.ivItemProductImage)
-                    break
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (ds in snapshot.children) {
+                        val imageUrl = "${ds.child("imageUrl").value}"
+                        Glide.with(holder.itemView).load(imageUrl).into(holder.ivItemProductImage)
+                        break
+                    }
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
+                override fun onCancelled(error: DatabaseError) {
 
-            }
+                }
 
-        })
+            })
     }
 
     override fun getFilter(): Filter {

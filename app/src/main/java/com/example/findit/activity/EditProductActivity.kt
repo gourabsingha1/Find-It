@@ -2,7 +2,6 @@ package com.example.findit.activity
 
 import android.Manifest
 import android.app.Activity
-import android.app.ProgressDialog
 import android.content.ContentValues
 import android.content.Intent
 import android.net.Uri
@@ -11,7 +10,6 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
-import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,7 +26,6 @@ import com.google.firebase.storage.FirebaseStorage
 class EditProductActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditProductBinding
-    private lateinit var progressDialog: ProgressDialog
     private var imageUri: Uri? = null
     private var productId = ""
     private lateinit var address: String
@@ -48,10 +45,6 @@ class EditProductActivity : AppCompatActivity() {
 
         // Hide action bar
         supportActionBar?.hide()
-
-        // Setup ProgressDialogue to show after updating profile
-        progressDialog = ProgressDialog(this)
-        progressDialog.setCanceledOnTouchOutside(false)
 
         // Go back
         binding.ivBackEditProduct.setOnClickListener {
@@ -248,9 +241,6 @@ class EditProductActivity : AppCompatActivity() {
     }
 
     private fun updateProductDb() {
-        progressDialog.setMessage("Updating user info")
-        progressDialog.show()
-
         val hashMap = HashMap<String, Any?>()
         hashMap["name"] = binding.etUpdateName.text.toString().trim()
         hashMap["price"] = binding.etUpdatePrice.text.toString().trim().toDouble()
@@ -261,11 +251,8 @@ class EditProductActivity : AppCompatActivity() {
 
         FirebaseDatabase.getInstance().getReference("Products")
             .child(productId).updateChildren(hashMap).addOnSuccessListener {
-                progressDialog.dismiss()
                 uploadImagesToStorage(productId)
             }.addOnFailureListener { e ->
-                Log.e(TAG, "updateUserInfoDb: ", e)
-                progressDialog.dismiss()
                 Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
             }
     }
@@ -276,15 +263,8 @@ class EditProductActivity : AppCompatActivity() {
             val imagePicked = imagePickedArraylist[i]
             val imageName = imagePicked.id
             val filePathAndName = "Products/$imageName"
-            val imageIndexForProgress = i + 1
             val storageRef = FirebaseStorage.getInstance().getReference(filePathAndName)
-            storageRef.putFile(imagePicked.imageUri!!).addOnProgressListener { snapshot ->
-                val progress = 100.0 * snapshot.bytesTransferred / snapshot.totalByteCount
-                val message =
-                    "Uploading $imageIndexForProgress of ${imagePickedArraylist.size} images. Progress ${progress.toInt()}%"
-                progressDialog.setMessage(message)
-                progressDialog.show()
-            }.addOnSuccessListener { taskSnapshot ->
+            storageRef.putFile(imagePicked.imageUri!!).addOnSuccessListener { taskSnapshot ->
                 val uriTask = taskSnapshot.storage.downloadUrl
                 while (!uriTask.isSuccessful);
                 val uploadedImageUrl = uriTask.result
@@ -296,11 +276,9 @@ class EditProductActivity : AppCompatActivity() {
                     ref.child(productId).child("images").child(imageName)
                         .updateChildren(hashMap)
                 }
-                progressDialog.dismiss()
-                Toast.makeText(this, "Profile Updated", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Product Updated", Toast.LENGTH_LONG).show()
             }.addOnFailureListener {
-                Log.e("", it.toString())
-                progressDialog.dismiss()
+                Log.e("uploadImagesToStorage", it.toString())
             }
         }
     }

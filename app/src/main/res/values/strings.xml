@@ -46,6 +46,6 @@
     </string>
 
     <string name="default_web_client_id">40489989995-3rmmdmjcorhrfv7cjhv52uupvr633vpl.apps.googleusercontent.com</string>
-<!--    <string name="my_google_map_api_key">AIzaSyBLbRy73mE8fm2ie9lr-aN1Etq48mA3amA</string> &lt;!&ndash; This is mine&ndash;&gt;-->
+    <!--    <string name="my_google_map_api_key">AIzaSyBLbRy73mE8fm2ie9lr-aN1Etq48mA3amA</string> &lt;!&ndash; This is mine&ndash;&gt;-->
     <string name="my_google_map_api_key">AIzaSyAeb-lpJjdmJ7hwEcJ6If2ydRT6hWiilJg</string>
 </resources>

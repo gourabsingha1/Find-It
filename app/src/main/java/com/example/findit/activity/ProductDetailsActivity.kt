@@ -117,7 +117,7 @@ class ProductDetailsActivity : AppCompatActivity() {
             hashMap["productId"] = productId
             reference.child(firebaseAuth.uid!!).child("Wishlist").child(productId).setValue(hashMap)
                 .addOnSuccessListener {
-                    Toast.makeText(this, "Added to wishlist", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Added to wishlist", Toast.LENGTH_SHORT).show()
                     alreadyInWishlist = true
                     binding.ivProductDetailsWishlist.setImageResource(R.drawable.baseline_favorite_24_red)
                 }.addOnFailureListener { e ->
@@ -134,7 +134,7 @@ class ProductDetailsActivity : AppCompatActivity() {
         } else {
             reference.child(firebaseAuth.uid!!).child("Wishlist").child(productId).removeValue()
                 .addOnSuccessListener {
-                    Toast.makeText(this, "Removed from wishlist", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Removed from wishlist", Toast.LENGTH_SHORT).show()
                     alreadyInWishlist = false
                     binding.ivProductDetailsWishlist.setImageResource(R.drawable.baseline_favorite_border_24)
                 }.addOnFailureListener { e ->

@@ -225,7 +225,7 @@ class AISearchActivity : AppCompatActivity() {
                     }
 
                     // Add the list to RecyclerView
-                    val productsAdapter = ProductsAdapter(productList)
+                    val productsAdapter = ProductsAdapter(productList, "Products")
                     binding.rvAISearch.adapter = productsAdapter
                     binding.tvSearchTags.visibility = View.VISIBLE
                     binding.pbAISearch.visibility = View.INVISIBLE

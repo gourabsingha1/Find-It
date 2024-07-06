@@ -12,12 +12,9 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.findit.R
 import com.example.findit.activity.AISearchActivity
 import com.example.findit.activity.LocationPickerActivity
 import com.example.findit.activity.ProductDetailsActivity
@@ -40,7 +37,7 @@ class HomeFragment : Fragment() {
     private var currentLatitude = 0.0
     private var currentLongitude = 0.0
     private var currentAddress = ""
-    private val MAX_DISTANCE_TO_LOAD_PRODUCTS_KM = 15
+    private val maxDistanceToLoadProductsKM = 15
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -115,7 +112,7 @@ class HomeFragment : Fragment() {
                             val distance = calculateDistanceKm(
                                 product?.latitude ?: 0.0, product?.longitude ?: 0.0
                             )
-                            if (distance <= MAX_DISTANCE_TO_LOAD_PRODUCTS_KM) {
+                            if (distance <= maxDistanceToLoadProductsKM) {
                                 productList.add(product!!)
                             }
                         } catch (e: Exception) {
@@ -137,11 +134,11 @@ class HomeFragment : Fragment() {
                     }
 
                     // Add the list to RecyclerView
-                    adapter1 = ProductsAdapter(productListLeft)
+                    adapter1 = ProductsAdapter(productListLeft, "Products")
                     binding.rvHomeProducts1.adapter = adapter1
-                    adapter2 = ProductsAdapter(productListRight)
+                    adapter2 = ProductsAdapter(productListRight, "Products")
                     binding.rvHomeProducts2.adapter = adapter2
-                    adapter3 = ProductsAdapter(productList)
+                    adapter3 = ProductsAdapter(productList, "Products")
                     binding.pbHome.visibility = View.INVISIBLE
 
                     // Open product details when clicked on product
@@ -161,6 +158,13 @@ class HomeFragment : Fragment() {
                             intent.putExtra("EXTRA_PRODUCT_ID", product.productId)
                             startActivity(intent)
                         }
+                    }
+
+                    // When no products are nearby
+                    if(adapter1.itemCount == 0) {
+                        binding.tvNoProductHere.visibility = View.VISIBLE
+                    } else {
+                        binding.tvNoProductHere.visibility = View.GONE
                     }
                 }
 

@@ -13,8 +13,11 @@ import com.example.findit.databinding.ActivityMainBinding
 import com.example.findit.fragments.AddFragment
 import com.example.findit.fragments.HomeFragment
 import com.example.findit.fragments.AccountFragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,11 +32,11 @@ class MainActivity : AppCompatActivity() {
         // Hide action bar
         supportActionBar?.hide()
 
-        // Set home fragment as default fragment
-        setFragment(HomeFragment())
-
         // Get instance of firebase auth
         firebaseAuth = FirebaseAuth.getInstance()
+
+        // Set home fragment as default fragment
+        setFragment(HomeFragment())
 
         // Bottom navigation view
         binding.bottomNavigationView.setOnItemSelectedListener { item ->

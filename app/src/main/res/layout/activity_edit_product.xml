@@ -21,23 +21,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:src="@drawable/baseline_arrow_back_ios_24"/>
+                android:src="@drawable/baseline_arrow_back_ios_24" />
 
             <TextView
-                android:layout_marginTop="10dp"
                 style="@style/TextAppearance.MaterialComponents.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
                 android:text="Update your product"
-                android:textSize="18sp"
-                android:layout_centerHorizontal="true"/>
+                android:textSize="18sp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tfUpdateName"
-                android:layout_marginTop="56dp"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="56dp"
                 android:focusable="false"
                 app:startIconDrawable="@drawable/baseline_drive_file_rename_outline_24">
 
@@ -104,6 +104,7 @@
                     android:textSize="12sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
             <TextView
                 android:id="@+id/tvPickUptoEditProduct"
                 android:layout_width="match_parent"
@@ -124,9 +125,9 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvImagesEditProduct"
-                android:layout_below="@id/ivAddImagesEditProduct"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/ivAddImagesEditProduct"
                 android:layout_marginBottom="82dp"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:spanCount="4"
@@ -141,6 +142,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="8dp"
         android:text="Update"
         android:textSize="12sp"
         app:cornerRadius="30dp" />

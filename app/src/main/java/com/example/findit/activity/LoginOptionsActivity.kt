@@ -69,6 +69,14 @@ class LoginOptionsActivity : AppCompatActivity() {
         binding.btnLoginOptionsEmail.setOnClickListener {
             startActivity(Intent(this, LogInEmailActivity::class.java))
         }
+
+        // Admin login
+        binding.btnLoginOptionsAdmin.setOnClickListener {
+            Intent(this, LogInEmailActivity::class.java).also {
+                it.putExtra("EXTRA_ADMIN", true)
+                startActivity(it)
+            }
+        }
     }
 
     private fun googleLogin() {

@@ -55,7 +55,7 @@ class MyProductsActivity : AppCompatActivity() {
                             Log.e("MyProductsActivityError", e.toString())
                         }
                     }
-                    adapter = ProductsAdapter(productList)
+                    adapter = ProductsAdapter(productList, "Products")
                     binding.rvMyProducts.adapter = adapter
                     binding.pbMyProducts.visibility = View.INVISIBLE
 

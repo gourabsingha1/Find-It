@@ -66,7 +66,7 @@ class WishlistProductsActivity : AppCompatActivity() {
                     // sometimes wishlist products don't load due to nested db listeners
                     Handler().postDelayed({
                         // Add the list to RecyclerView
-                        adapter = ProductsAdapter(productList)
+                        adapter = ProductsAdapter(productList, "Products")
                         binding.rvWishlistProducts.adapter = adapter
                         binding.pbWishlistProducts.visibility = View.INVISIBLE
 

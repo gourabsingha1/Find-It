@@ -53,7 +53,6 @@ class AddFragment : Fragment() {
     private var longitude: Double = 0.0
     private lateinit var imagePickedAdapter: ImagesPickedAdapter
     private var imagePickedArraylist: ArrayList<ImagesPicked> = ArrayList()
-    private lateinit var progressDialog: ProgressDialog
     private lateinit var generativeModel: GenerativeModel
 
     override fun onCreateView(
@@ -61,11 +60,6 @@ class AddFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentAddBinding.inflate(layoutInflater)
-
-        // Init progressDialog
-        progressDialog = ProgressDialog(requireContext())
-        progressDialog.setTitle("Please wait")
-        progressDialog.setCanceledOnTouchOutside(false)
 
         // Get instance of firebase auth
         firebaseAuth = FirebaseAuth.getInstance()
@@ -303,7 +297,7 @@ class AddFragment : Fragment() {
     }
 
     private fun uploadProduct(searchTags: ArrayList<String>) {
-        val reference = FirebaseDatabase.getInstance().getReference("Products")
+        val reference = FirebaseDatabase.getInstance().getReference("ProductsQueue")
         val productId = reference.push().key!!
         val timestamp = System.currentTimeMillis()
         val hashMap = HashMap<String, Any?>()
@@ -318,6 +312,7 @@ class AddFragment : Fragment() {
         hashMap["longitude"] = longitude
         hashMap["address"] = address
 
+        binding.pbAdd.visibility = View.VISIBLE
         // Set data to firebase realtime db
         reference.child(productId).setValue(hashMap).addOnSuccessListener {
             uploadImagesToStorage(productId)
@@ -332,15 +327,8 @@ class AddFragment : Fragment() {
             val imagePicked = imagePickedArraylist[i]
             val imageName = imagePicked.id
             val filePathAndName = "Products/$imageName"
-            val imageIndexForProgress = i + 1
             val storageRef = FirebaseStorage.getInstance().getReference(filePathAndName)
-            storageRef.putFile(imagePicked.imageUri!!).addOnProgressListener { snapshot ->
-                    val progress = 100.0 * snapshot.bytesTransferred / snapshot.totalByteCount
-                    val message =
-                        "Uploading $imageIndexForProgress of ${imagePickedArraylist.size} images. Progress ${progress.toInt()}%"
-                    progressDialog.setMessage(message)
-                    progressDialog.show()
-                }.addOnSuccessListener { taskSnapshot ->
+            storageRef.putFile(imagePicked.imageUri!!).addOnSuccessListener { taskSnapshot ->
                     val uriTask = taskSnapshot.storage.downloadUrl
                     while (!uriTask.isSuccessful);
                     val uploadedImageUrl = uriTask.result
@@ -348,20 +336,18 @@ class AddFragment : Fragment() {
                         val hashMap = HashMap<String, Any>()
                         hashMap["id"] = "${imagePicked.id}"
                         hashMap["imageUrl"] = "$uploadedImageUrl"
-                        val ref = FirebaseDatabase.getInstance().getReference("Products")
+                        val ref = FirebaseDatabase.getInstance().getReference("ProductsQueue")
                         ref.child(productId).child("images").child(imageName)
                             .updateChildren(hashMap)
                     }
-                    progressDialog.dismiss()
                 }.addOnFailureListener {
                     Log.e("", it.toString())
-                    progressDialog.dismiss()
                 }
         }
-//        Handler(Looper.getMainLooper()).postDelayed({
-//            Toast.makeText(requireContext(), "Product added successfully", Toast.LENGTH_SHORT).show()
+        Handler(Looper.getMainLooper()).postDelayed({
+            Toast.makeText(requireContext(), "Request submitted", Toast.LENGTH_LONG).show()
             binding.pbAdd.visibility = View.INVISIBLE
-//        }, 2000)
+        }, 5000)
 
         // Erase previous data
 //        binding.etAddName.text.clear()
