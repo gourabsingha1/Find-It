@@ -75,16 +75,13 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.ProductDetailsActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:exported="false" />
         <activity
             android:name=".activity.MyProductsActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:exported="false"/>
         <activity
             android:name=".activity.WishlistProductsActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:exported="false"/>
         <activity
             android:name=".activity.EditProfileActivity"
             android:exported="false"
