@@ -28,7 +28,9 @@ android {
         viewBinding = true
     }
     compileOptions {
+        // If you try to use any Java features from a version higher than 1.8, you’ll get a compilation error.
         sourceCompatibility JavaVersion.VERSION_1_8
+        // the compiled bytecode will be compatible with Java 8 or later JVMs.
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
